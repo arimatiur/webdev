@@ -1,80 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung</title>
-		<!-- Bootstrap CSS -->
-		<link
-			rel="stylesheet"
-			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-		/>
-	</head>
-	<body>
-		<script>
-			window.onload = function () {
-				const pdfList = document.getElementById("menu");
-				const pdfViewer = document.getElementById("content");
-				const pdfFolder = "pdf/";
+<html>
+<head>
+  <title>Filtered Table with Bootstrap</title>
+  <!-- Add Bootstrap CSS link -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-4">
+    <h2>Filtered Table Example</h2>
+    <input type="text" id="filterInput" class="form-control mb-2" placeholder="Type to filter...">
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Age</th>
+          <th>Country</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>John Doe</td>
+          <td>30</td>
+          <td>USA</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Jane Smith</td>
+          <td>25</td>
+          <td>Canada</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Michael Johnson</td>
+          <td>40</td>
+          <td>UK</td>
+        </tr>
+        <!-- Add more table rows here -->
+      </tbody>
+    </table>
+  </div>
 
-				function loadPDF(pdfFileName) {
-					const blobURL = pdfFolder + pdfFileName;
-					pdfViewer.setAttribute("src", blobURL);
-				}
+  <!-- Add Bootstrap JS and jQuery links -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-				const jsonData = {
-					files: [
-						"5 Ari Matiur _GIS Development Mei 2021.pdf",
-						"7 Ari Matiur _GIS Development Juli 2021.pdf",
-						"8 Ari Matiur _GIS Development Agustus 2021.pdf",
-						"9 Ari Matiur _GIS Development September 2021.pdf",
-						"11 Ari Matiur _GIS Development November 2021.pdf",
-						"12 Ari Matiur _GIS Development Desember 2021.pdf",
-						"Ari Matiur _GIS Development Laporan Akhir Juli-Desember 2021.pdf",
-					],
-				};
-
-				jsonData.files.forEach((pdfFile) => {
-					const link = document.createElement("button");
-					link.textContent = pdfFile;
-					link.href = "#";
-					link.addEventListener("click", () => loadPDF(pdfFile));
-					pdfList.appendChild(link);
-				});
-			};
-		</script>
-
-		<div class="container-fluid">
-			<!-- Header -->
-			<div class="row bg-dark text-white py-3" style="display: flex">
-				<div class="col" style="display: flex; flex-direction: row">
-					<h2 style="align-items: start">
-						Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung
-					</h2>
-					<button style="align-content: flex-end">Sign Out</button>
-				</div>
-			</div>
-
-			<div class="row mt-3" style="height: 85vh">
-				<!-- Side Panel -->
-				<div class="col-md-3" id="side-panel"> <!-- left-column -->
-					<div class="bg-light p-3" style="height: 100%" id="menu">
-						<h3>Daftar PDF</h3>
-						<ul id="pdfList"></ul>
-					</div>
-				</div>
-
-				<!-- Main Content -->
-				<div class="col-md-9"> <!-- right-column -->
-					<div class="bg-info p-0" style="height: 100%" id="div-content">
-						<iframe
-							id="content"
-							src=""
-							style="width: 100%; height: 100%"
-						></iframe>
-					</div>
-				</div>
-			</div>
-		</div>
-	</body>
+  <script>
+    // Function to filter the table content based on the input
+    $(document).ready(function() {
+      $("#filterInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("table tbody tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+      });
+    });
+  </script>
+</body>
 </html>
