@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung</title>
+		<!-- Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		/>
+	</head>
+	<body>
+		<script>
+			window.onload = function () {
+				const pdfList = document.getElementById("menu");
+				const pdfViewer = document.getElementById("content");
+				const pdfFolder = "pdf/";
+
+				function loadPDF(pdfFileName) {
+					const blobURL = pdfFolder + pdfFileName;
+					pdfViewer.setAttribute("src", blobURL);
+				}
+
+				const jsonData = {
+					files: [
+						"5 Ari Matiur _GIS Development Mei 2021.pdf",
+						"7 Ari Matiur _GIS Development Juli 2021.pdf",
+						"8 Ari Matiur _GIS Development Agustus 2021.pdf",
+						"9 Ari Matiur _GIS Development September 2021.pdf",
+						"11 Ari Matiur _GIS Development November 2021.pdf",
+						"12 Ari Matiur _GIS Development Desember 2021.pdf",
+						"Ari Matiur _GIS Development Laporan Akhir Juli-Desember 2021.pdf",
+					],
+				};
+
+				jsonData.files.forEach((pdfFile) => {
+					const link = document.createElement("button");
+					link.textContent = pdfFile;
+					link.href = "#";
+					link.addEventListener("click", () => loadPDF(pdfFile));
+					pdfList.appendChild(link);
+				});
+			};
+		</script>
+
+		<div class="container-fluid">
+			<!-- Header -->
+			<div class="row bg-dark text-white py-3" style="display: flex">
+				<div class="col" style="display: flex; flex-direction: row">
+					<h2 style="align-items: start">
+						Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung
+					</h2>
+					<button style="align-content: flex-end">Sign Out</button>
+				</div>
+			</div>
+
+			<div class="row mt-3" style="height: 85vh">
+				<!-- Side Panel -->
+				<div class="col-md-3" id="side-panel"> <!-- left-column -->
+					<div class="bg-light p-3" style="height: 100%" id="menu">
+						<h3>Daftar PDF</h3>
+						<ul id="pdfList"></ul>
+					</div>
+				</div>
+
+				<!-- Main Content -->
+				<div class="col-md-9"> <!-- right-column -->
+					<div class="bg-info p-0" style="height: 100%" id="div-content">
+						<iframe
+							id="content"
+							src=""
+							style="width: 100%; height: 100%"
+						></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
