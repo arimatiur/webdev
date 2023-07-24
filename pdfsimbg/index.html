@@ -1,161 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <style>
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #888;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
-    </style>
-    <!-- Bootstrap CSS -->
-  </head>
-  <body>
-    <script>
-      window.onload = function () {
-        //Side Panel
-        const leftColumn = document.getElementById("left-column");
-        const sidePanel = document.createElement("div");
-        sidePanel.className = "bg-light p-0";
-        sidePanel.style = "height: 100%";
-        const pdfTable = document.createElement("table");
-        pdfTable.className = "table table-hover";
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung</title>
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		/>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<style>
+			::-webkit-scrollbar {
+				width: 10px;
+			}
+			::-webkit-scrollbar-track {
+				background: #f1f1f1;
+			}
+			::-webkit-scrollbar-thumb {
+				background: #888;
+			}
+			::-webkit-scrollbar-thumb:hover {
+				background: #555;
+			}
+		</style>
+		<!-- Bootstrap CSS -->
+	</head>
+	<body>
+		<script>
+			window.onload = function () {
+				//Side Panel
+				const leftColumn = document.getElementById("left-column");
+				const sidePanel = document.createElement("div");
+				sidePanel.className = "bg-light p-0";
+				sidePanel.style = "height: 75%; overflow-y: scroll";
+				const pdfTable = document.createElement("table");
+				pdfTable.className = "table table-hover";
+				const submitDiv = document.createElement("div");
 
-        const tableTHead = document.createElement("thead");
-        const tableTR = document.createElement("tr");
-        const tableTHIndex = document.createElement("th");
-        tableTHIndex.scope = "col";
-        tableTHIndex.innerText = "#";
-        const tableTHNama = document.createElement("th");
-        tableTHNama.scope = "col";
-        tableTHNama.innerText = "PDF";
-        tableTR.appendChild(tableTHIndex);
-        tableTR.appendChild(tableTHNama);
-        tableTHead.appendChild(tableTR);
+				const submitButton = document.createElement("button");
+				submitButton.className = "btn btn-success";
+				submitButton.style = "margin: 10%";
+				submitButton.innerHTML = "Submit";
+				submitDiv.appendChild(submitButton);
+				submitButton.addEventListener("click", () => {
+					printCheckedPDFs();
+				});
 
-        const tableTBody = document.createElement("tbody");
+				const tableTHead = document.createElement("thead");
+				const tableTR = document.createElement("tr");
+				const tableTHIndex = document.createElement("th");
+				tableTHIndex.scope = "col";
+				tableTHIndex.innerText = "#";
+				tableTR.appendChild(tableTHIndex);
+				const tableTHNama = document.createElement("th");
+				tableTHNama.scope = "col";
+				tableTHNama.innerText = "PDF";
+				tableTR.appendChild(tableTHNama);
+				const tableTHCheckbox = document.createElement("th");
+				tableTHCheckbox.scope = "col";
+				tableTHCheckbox.innerText = "Simpan";
+				tableTR.appendChild(tableTHCheckbox);
+				tableTHead.appendChild(tableTR);
 
-        pdfTable.appendChild(tableTHead);
-        pdfTable.appendChild(tableTBody);
-        sidePanel.appendChild(pdfTable);
-        leftColumn.appendChild(sidePanel);
+				const tableTBody = document.createElement("tbody");
 
-        //Main Content
-        const rightColumn = document.getElementById("right-column");
-        const mainContent = document.createElement("div");
-        mainContent.className = "bg-info p-0";
-        mainContent.style = "height: 100%";
-        const pdfViewer = document.createElement("iframe");
-        pdfViewer.src = "";
-        pdfViewer.style = "width: 100%; height: 100%";
-        mainContent.appendChild(pdfViewer);
-        rightColumn.appendChild(mainContent);
+				pdfTable.appendChild(tableTHead);
+				pdfTable.appendChild(tableTBody);
+				sidePanel.appendChild(pdfTable);
+				leftColumn.appendChild(sidePanel);
+				leftColumn.appendChild(submitDiv);
 
-        const pdfFolder = "pdf/";
+				//Main Content
+				const rightColumn = document.getElementById("right-column");
+				const mainContent = document.createElement("div");
+				mainContent.className = "bg-info p-0";
+				mainContent.style = "height: 100%";
+				const pdfViewer = document.createElement("iframe");
+				pdfViewer.src = "";
+				pdfViewer.style = "width: 100%; height: 100%";
+				mainContent.appendChild(pdfViewer);
+				rightColumn.appendChild(mainContent);
 
-        function loadPDF(pdfFileName) {
-          const blobURL = pdfFolder + pdfFileName;
-          pdfViewer.setAttribute("src", blobURL);
-        }
+				const pdfFolder = "pdf/";
+				const checkedPDFs = new Set();
 
-        const jsonData = {
-          files: [
-            "5 Ari Matiur _GIS Development Mei 2021.pdf",
-            "7 Ari Matiur _GIS Development Juli 2021.pdf",
-            "8 Ari Matiur _GIS Development Agustus 2021.pdf",
-            "9 Ari Matiur _GIS Development September 2021.pdf",
-            "11 Ari Matiur _GIS Development November 2021.pdf",
-            "12 Ari Matiur _GIS Development Desember 2021.pdf",
-            "Ari Matiur _GIS Development Laporan Akhir Juli-Desember 2021.pdf",
-            "10 Ari Matiur _GIS Development Oktober 2022.pdf",
-            "9 Ari Matiur _GIS Development September 2022.pdf",
-            "8 Ari Matiur _GIS Development Agustus 2022.pdf",
-            "7 Ari Matiur _GIS Development Juli 2022.pdf",
-            "6 Ari Matiur _GIS Development Juni 2022.pdf",
-            "5 Ari Matiur _GIS Development Mei 2022.pdf",
-            "4 Ari Matiur _GIS Development April 2022.pdf",
-            "3 Ari Matiur _GIS Development Maret 2022.pdf",
-            "2 Ari Matiur _GIS Development Februari 2022.pdf",
-            "1 Ari Matiur _GIS Development Januari 2022.pdf",
-          ],
-        };
+				const jsonData = {
+					files: [
+						"5 Ari Matiur _GIS Development Mei 2021.pdf",
+						"7 Ari Matiur _GIS Development Juli 2021.pdf",
+						"8 Ari Matiur _GIS Development Agustus 2021.pdf",
+						"9 Ari Matiur _GIS Development September 2021.pdf",
+						"11 Ari Matiur _GIS Development November 2021.pdf",
+						"12 Ari Matiur _GIS Development Desember 2021.pdf",
+						"Ari Matiur _GIS Development Laporan Akhir Juli-Desember 2021.pdf",
+						"10 Ari Matiur _GIS Development Oktober 2022.pdf",
+						"9 Ari Matiur _GIS Development September 2022.pdf",
+						"8 Ari Matiur _GIS Development Agustus 2022.pdf",
+						"7 Ari Matiur _GIS Development Juli 2022.pdf",
+						"6 Ari Matiur _GIS Development Juni 2022.pdf",
+						"5 Ari Matiur _GIS Development Mei 2022.pdf",
+						"4 Ari Matiur _GIS Development April 2022.pdf",
+						"3 Ari Matiur _GIS Development Maret 2022.pdf",
+						"2 Ari Matiur _GIS Development Februari 2022.pdf",
+						"1 Ari Matiur _GIS Development Januari 2022.pdf",
+					],
+				};
 
-        jsonData.files.forEach((pdfFile, index) => {
-          const tr = document.createElement("tr");
-          const tdNama = document.createElement("td");
-          tdNama.textContent = pdfFile;
-          tdNama.addEventListener("click", () => loadPDF(pdfFile));
-          const tdIndex = document.createElement("td");
-          tdIndex.textContent = index + 1;
-          tr.appendChild(tdIndex);
-          tr.appendChild(tdNama);
-          tableTBody.appendChild(tr);
-        });
-        // Function to filter the table content based on the input
-        $(document).ready(function () {
-          $("#filterInput").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
-            $("table tbody tr").filter(function () {
-              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-            });
-          });
-        });
-      };
-    </script>
+				jsonData.files.forEach((pdfFile, index) => {
+					const tr = document.createElement("tr");
+					const tdIndex = document.createElement("td");
+					tdIndex.textContent = index + 1;
+					tr.appendChild(tdIndex);
+					const tdNama = document.createElement("td");
+					tdNama.textContent = pdfFile;
+					tdNama.addEventListener("click", () => loadPDF(pdfFile));
+					tr.appendChild(tdNama);
+					const tdCheckBox = document.createElement("input");
+					tdCheckBox.type = "checkbox";
+					tdCheckBox.style = "margin-left: 40%; margin-top: 50%; width: 20px; height: 20px";
+					tdCheckBox.addEventListener("click", () => {
+						handleCheckboxClick(pdfFile);
+					});
+					tr.appendChild(tdCheckBox);
+					tableTBody.appendChild(tr);
+				});
 
-    <div class="container-fluid">
-      <!-- Header -->
-      <div class="row bg-dark text-white py-3" style="display: flex">
-        <div
-          class="col"
-          style="display: flex; flex-direction: row; align-items: center"
-        >
-          <div style="text-align: left" class="col-md-6">
-            <h3>
-              Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung
-            </h3>
-          </div>
-          <div style="text-align: right" class="col-md-6">
-            <button type="button" class="btn btn-secondary">Sign Out</button>
-          </div>
-        </div>
-      </div>
+				// Function to handle checkbox click
+				function handleCheckboxClick(pdfFile) {
+					if (checkedPDFs.has(pdfFile)) {
+						checkedPDFs.delete(pdfFile);
+					} else {
+						checkedPDFs.add(pdfFile);
+					}
+				}
 
-      <div class="row mt-3" style="height: 84vh">
-        <!-- Side Panel -->
-        <div
-          class="col-md-3"
-          id="left-column"
-          style="height: 100%; overflow-y: scroll"
-        >
-          <h4>Daftar PDF</h4>
-          <input
-            type="text"
-            id="filterInput"
-            class="form-control mb-2"
-            placeholder="Cari PDF..."
-          />
-        </div>
+				function printCheckedPDFs() {
+					console.log("Checked PDFs:", checkedPDFs);
+				}
 
-        <!-- Main Content -->
-        <div class="col-md-9" id="right-column"></div>
-      </div>
-    </div>
-  </body>
+				function loadPDF(pdfFileName) {
+					const blobURL = pdfFolder + pdfFileName;
+          console.log(blobURL);
+					pdfViewer.setAttribute("src", blobURL);
+				}
+
+				// Function to filter the table content based on the input
+				$(document).ready(function () {
+					$("#filterInput").on("keyup", function () {
+						var value = $(this).val().toLowerCase();
+						$("table tbody tr").filter(function () {
+							$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+						});
+					});
+				});
+			};
+		</script>
+
+		<div class="container-fluid">
+			<!-- Header -->
+			<div class="row bg-dark text-white py-3" style="display: flex">
+				<div
+					class="col"
+					style="display: flex; flex-direction: row; align-items: center"
+				>
+					<div class="col-md-0">
+						<img
+							src="https://jakartasatu.jakarta.go.id/portal/sharing/rest/content/items/77be3b899cd6463aad512e81544351a8/data"
+							style="width: 75.6px; height: 81.2px"
+						/>
+					</div>
+					<div
+						style="text-align: left; display: flex; flex-direction: column"
+						class="col-md-10"
+					>
+						<h3>
+							Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung
+						</h3>
+						<h3>Dinas Cipta Karya Tata Ruang Pertanahan</h3>
+					</div>
+					<div style="text-align: right" class="col-md-1">
+						<button type="button" class="btn btn-secondary">Sign Out</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-3" style="height: 83vh">
+				<!-- Side Panel -->
+				<div class="col-md-3" id="left-column" style="height: 100%">
+					<h4 style="align-items: center;">Cari ID PBG</h4>
+					<input
+						type="text"
+						id="filterInput"
+						class="form-control mb-2"
+						placeholder="Cari PDF..."
+					/>
+				</div>
+
+				<!-- Main Content -->
+				<div class="col-md-9" id="right-column"></div>
+			</div>
+		</div>
+	</body>
 </html>
