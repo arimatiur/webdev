@@ -96,9 +96,7 @@
           </div>
 
           <div class="center">
-            <button class="btn btn-success btn-lg" id="submit-button">
-              Submit
-            </button>
+            <button class="btn btn-success" id="submit-button">Submit</button>
           </div>
         </div>
 
@@ -161,15 +159,13 @@
           tdNama.textContent = pdfFile;
           tdNama.addEventListener("click", () => loadPDF(pdfFile));
           tr.appendChild(tdNama);
-          const tdCheckBox = document.createElement("td");
+          const tdCheckBox = document.createElement("input");
           tdCheckBox.className = "center";
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.style = " width: 15px; height: 15px";
-          checkbox.addEventListener("click", () => {
+          tdCheckBox.type = "checkbox";
+          tdCheckBox.style = "; width: 15px; height: 15px";
+          tdCheckBox.addEventListener("click", () => {
             handleCheckboxClick(pdfFile);
           });
-          tdCheckBox.appendChild(checkbox);
           tr.appendChild(tdCheckBox);
           tableTBody.appendChild(tr);
         });
@@ -190,6 +186,7 @@
 
         function loadPDF(pdfFileName) {
           const blobURL = pdfFolder + pdfFileName;
+          console.log(blobURL);
           pdfViewer.setAttribute("src", blobURL);
         }
 
