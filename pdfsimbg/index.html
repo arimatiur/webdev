@@ -1,208 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung</title>
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <style>
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung</title>
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		/>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<style>
+			::-webkit-scrollbar {
+				width: 10px;
+			}
 
-      ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-      }
+			::-webkit-scrollbar-track {
+				background: #f1f1f1;
+			}
 
-      ::-webkit-scrollbar-thumb {
-        background: #888;
-      }
+			::-webkit-scrollbar-thumb {
+				background: #888;
+			}
 
-      ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-      }
+			::-webkit-scrollbar-thumb:hover {
+				background: #555;
+			}
 
-      .center {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 10%;
-      }
-    </style>
-    <!-- Bootstrap CSS -->
-  </head>
+			.center {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 10%;
+			}
+		</style>
+		<!-- Bootstrap CSS -->
+	</head>
 
-  <body>
-    <div class="container-fluid">
-      <!-- Header -->
-      <div class="row bg-dark text-white py-3" style="display: flex">
-        <div
-          class="col"
-          style="display: flex; flex-direction: row; align-items: center"
-        >
-          <div class="col-md-0">
-            <img
-              src="https://jakartasatu.jakarta.go.id/portal/sharing/rest/content/items/77be3b899cd6463aad512e81544351a8/data"
-              style="width: 75.6px; height: 81.2px"
-            />
-          </div>
-          <div
-            style="text-align: left; display: flex; flex-direction: column"
-            class="col-md-10"
-          >
-            <h4>
-              Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung
-            </h4>
-            <h4>Dinas Cipta Karya Tata Ruang Pertanahan</h4>
-          </div>
-          <div style="text-align: right" class="col-md-1">
-            <button type="button" class="btn btn-primary btn-sm">
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </div>
+	<body>
+		<div class="container-fluid">
+			<!-- Header -->
+			<div class="row bg-dark text-white py-3" style="display: flex">
+				<div
+					class="col"
+					style="display: flex; flex-direction: row; align-items: center"
+				>
+					<div class="col-md-0">
+						<img
+							src="https://jakartasatu.jakarta.go.id/portal/sharing/rest/content/items/77be3b899cd6463aad512e81544351a8/data"
+							style="width: 75.6px; height: 81.2px"
+						/>
+					</div>
+					<div
+						style="text-align: left; display: flex; flex-direction: column"
+						class="col-md-10"
+					>
+						<h4>
+							Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung
+						</h4>
+						<h4>Dinas Cipta Karya Tata Ruang Pertanahan</h4>
+					</div>
+					<div style="text-align: right" class="col-md-1">
+						<button type="button" class="btn btn-primary btn-sm">
+							Sign Out
+						</button>
+					</div>
+				</div>
+			</div>
 
-      <div class="row mt-3" style="height: 83vh">
-        <!-- Side Panel -->
-        <div class="col-md-3" id="left-column" style="height: 100%">
-          <h5 style="text-align: center">Cari ID PBG</h5>
-          <input
-            type="text"
-            id="filterInput"
-            class="form-control mb-2"
-            placeholder="Cari PDF..."
-          />
+			<div class="row mt-3" style="height: 83vh">
+				<!-- Side Panel -->
+				<div class="col-md-3" id="left-column" style="height: 100%">
+					<h5 style="text-align: center">Cari ID PBG</h5>
+					<input
+						type="text"
+						id="filterInput"
+						class="form-control mb-2"
+						placeholder="Cari PDF..."
+					/>
 
-          <!-- Static HTML representation of the PDF table -->
-          <div class="bg-light p-0" style="height: 75%; overflow-y: scroll">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">PDF</th>
-                  <th scope="col">Simpan</th>
-                </tr>
-              </thead>
-              <tbody id="table-body">
-                <!-- The table rows for PDFs will be dynamically created in JavaScript -->
-              </tbody>
-            </table>
-          </div>
+					<!-- Static HTML representation of the PDF table -->
+					<div class="bg-light p-0" style="height: 75%; overflow-y: scroll">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">PDF</th>
+									<th scope="col">Simpan</th>
+								</tr>
+							</thead>
+							<tbody id="table-body">
+								<!-- The table rows for PDFs will be dynamically created in JavaScript -->
+							</tbody>
+						</table>
+					</div>
 
-          <div class="center">
-            <button class="btn btn-success btn-lg" id="submit-button">
-              Submit
-            </button>
-          </div>
-        </div>
+					<div class="center">
+						<button class="btn btn-success btn-lg" id="submit-button">
+							Submit
+						</button>
+					</div>
+				</div>
 
-        <!-- Main Content -->
-        <div class="col-md-9" id="right-column">
-          <div class="bg-info p-0" style="height: 100%">
-            <!-- PDF viewer iframe -->
-            <iframe
-              src=""
-              style="align-items: center; width: 100%; height: 100%"
-              id="pdf-viewer"
-            ></iframe>
-          </div>
-        </div>
-      </div>
-    </div>
+				<!-- Main Content -->
+				<div class="col-md-9" id="right-column">
+					<div class="bg-info p-0" style="height: 100%">
+						<!-- PDF viewer iframe -->
+						<iframe
+							src=""
+							style="align-items: center; width: 100%; height: 100%"
+							id="pdf-viewer"
+						></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
 
-    <script>
-      window.onload = function () {
-        const submitButton = document.getElementById("submit-button");
-        submitButton.addEventListener("click", () => {
-          printCheckedPDFs();
-        });
+		<script>
+			window.onload = function () {
+				const submitButton = document.getElementById("submit-button");
+				submitButton.addEventListener("click", () => {
+					printCheckedPDFs();
+				});
 
-        const tableTBody = document.getElementById("table-body");
+				const tableTBody = document.getElementById("table-body");
 
-        const pdfViewer = document.getElementById("pdf-viewer");
+				const pdfViewer = document.getElementById("pdf-viewer");
 
-        const pdfFolder = "pdf/";
-        const checkedPDFs = new Set();
+				const pdfFolder = "pdf/";
+				const checkedPDFs = new Set();
 
-        const jsonData = {
-          files: [
-            "5 Ari Matiur _GIS Development Mei 2021.pdf",
-            "7 Ari Matiur _GIS Development Juli 2021.pdf",
-            "8 Ari Matiur _GIS Development Agustus 2021.pdf",
-            "9 Ari Matiur _GIS Development September 2021.pdf",
-            "11 Ari Matiur _GIS Development November 2021.pdf",
-            "12 Ari Matiur _GIS Development Desember 2021.pdf",
-            "Ari Matiur _GIS Development Laporan Akhir Juli-Desember 2021.pdf",
-            "10 Ari Matiur _GIS Development Oktober 2022.pdf",
-            "9 Ari Matiur _GIS Development September 2022.pdf",
-            "8 Ari Matiur _GIS Development Agustus 2022.pdf",
-            "7 Ari Matiur _GIS Development Juli 2022.pdf",
-            "6 Ari Matiur _GIS Development Juni 2022.pdf",
-            "5 Ari Matiur _GIS Development Mei 2022.pdf",
-            "4 Ari Matiur _GIS Development April 2022.pdf",
-            "3 Ari Matiur _GIS Development Maret 2022.pdf",
-            "2 Ari Matiur _GIS Development Februari 2022.pdf",
-            "1 Ari Matiur _GIS Development Januari 2022.pdf",
-          ],
-        };
+				const jsonData = {
+					files: [
+						"5 Ari Matiur _GIS Development Mei 2021.pdf",
+						"7 Ari Matiur _GIS Development Juli 2021.pdf",
+						"8 Ari Matiur _GIS Development Agustus 2021.pdf",
+						"9 Ari Matiur _GIS Development September 2021.pdf",
+						"11 Ari Matiur _GIS Development November 2021.pdf",
+						"12 Ari Matiur _GIS Development Desember 2021.pdf",
+						"Ari Matiur _GIS Development Laporan Akhir Juli-Desember 2021.pdf",
+						"10 Ari Matiur _GIS Development Oktober 2022.pdf",
+						"9 Ari Matiur _GIS Development September 2022.pdf",
+						"8 Ari Matiur _GIS Development Agustus 2022.pdf",
+						"7 Ari Matiur _GIS Development Juli 2022.pdf",
+						"6 Ari Matiur _GIS Development Juni 2022.pdf",
+						"5 Ari Matiur _GIS Development Mei 2022.pdf",
+						"4 Ari Matiur _GIS Development April 2022.pdf",
+						"3 Ari Matiur _GIS Development Maret 2022.pdf",
+						"2 Ari Matiur _GIS Development Februari 2022.pdf",
+						"1 Ari Matiur _GIS Development Januari 2022.pdf",
+					],
+				};
 
-        jsonData.files.forEach((pdfFile, index) => {
-          const tr = document.createElement("tr");
-          const tdIndex = document.createElement("td");
-          tdIndex.textContent = index + 1;
-          tr.appendChild(tdIndex);
-          const tdNama = document.createElement("td");
-          tdNama.textContent = pdfFile;
-          tdNama.addEventListener("click", () => loadPDF(pdfFile));
-          tr.appendChild(tdNama);
-          const tdCheckBox = document.createElement("td");
-          tdCheckBox.className = "center";
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.style = " width: 15px; height: 15px";
-          checkbox.addEventListener("click", () => {
-            handleCheckboxClick(pdfFile);
-          });
-          tdCheckBox.appendChild(checkbox);
-          tr.appendChild(tdCheckBox);
-          tableTBody.appendChild(tr);
-        });
+				jsonData.files.forEach((pdfFile, index) => {
+					const tr = document.createElement("tr");
+					const tdIndex = document.createElement("td");
+					tdIndex.textContent = index + 1;
+					tr.appendChild(tdIndex);
+					const tdNama = document.createElement("td");
+					tdNama.textContent = pdfFile;
+					tdNama.addEventListener("click", () => loadPDF(pdfFile));
+					tr.appendChild(tdNama);
+					const tdCheckBox = document.createElement("td");
+					tdCheckBox.style = "text-align: center;vertical-align: middle";
+					tdCheckBox.className = "center";
+					const checkbox = document.createElement("input");
+					checkbox.type = "checkbox";
+					checkbox.style = " width: 15px; height: 15px";
+					checkbox.addEventListener("click", () => {
+						handleCheckboxClick(pdfFile);
+					});
+					tdCheckBox.appendChild(checkbox);
+					tr.appendChild(tdCheckBox);
+					tableTBody.appendChild(tr);
+				});
 
-        // Function to handle checkbox click
-        function handleCheckboxClick(pdfFile) {
-          if (checkedPDFs.has(pdfFile)) {
-            checkedPDFs.delete(pdfFile);
-          } else {
-            checkedPDFs.add(pdfFile);
-          }
-        }
+				// Function to handle checkbox click
+				function handleCheckboxClick(pdfFile) {
+					if (checkedPDFs.has(pdfFile)) {
+						checkedPDFs.delete(pdfFile);
+					} else {
+						checkedPDFs.add(pdfFile);
+					}
+				}
 
-        //Function Submit Button
-        function printCheckedPDFs() {
-          console.log("Checked PDFs:", checkedPDFs);
-        }
+				//Function Submit Button
+				function printCheckedPDFs() {
+					console.log("Checked PDFs:", checkedPDFs);
+				}
 
-        function loadPDF(pdfFileName) {
-          const blobURL = pdfFolder + pdfFileName;
-          pdfViewer.setAttribute("src", blobURL);
-        }
+				function loadPDF(pdfFileName) {
+					const blobURL = pdfFolder + pdfFileName;
+					pdfViewer.setAttribute("src", blobURL);
+				}
 
-        // Function to filter the table content based on the input
-        $(document).ready(function () {
-          $("#filterInput").on("keyup", function () {
-            var value = $(this).val().toLowerCase();
-            $("table tbody tr").filter(function () {
-              $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-            });
-          });
-        });
-      };
-    </script>
-  </body>
+				// Function to filter the table content based on the input
+				$(document).ready(function () {
+					$("#filterInput").on("keyup", function () {
+						var value = $(this).val().toLowerCase();
+						$("table tbody tr").filter(function () {
+							$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+						});
+					});
+				});
+			};
+		</script>
+	</body>
 </html>
