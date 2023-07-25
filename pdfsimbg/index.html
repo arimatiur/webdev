@@ -82,7 +82,7 @@
 					<div class="bg-light p-0" style="height: 75%; overflow-y: scroll">
 						<table class="table table-hover">
 							<thead>
-								<tr>
+								<tr style="font-size: small;">
 									<th scope="col">#</th>
 									<th scope="col">PDF</th>
 									<th scope="col">Simpan</th>
@@ -154,15 +154,16 @@
 				jsonData.files.forEach((pdfFile, index) => {
 					const tr = document.createElement("tr");
 					const tdIndex = document.createElement("td");
+					tdIndex.style = "font-size: small";
 					tdIndex.textContent = index + 1;
 					tr.appendChild(tdIndex);
 					const tdNama = document.createElement("td");
+					tdNama.style = "font-size: small";
 					tdNama.textContent = pdfFile;
 					tdNama.addEventListener("click", () => loadPDF(pdfFile));
 					tr.appendChild(tdNama);
 					const tdCheckBox = document.createElement("td");
-					tdCheckBox.style = "text-align: center;vertical-align: middle";
-					tdCheckBox.className = "center";
+					tdCheckBox.style = "text-align: center";
 					const checkbox = document.createElement("input");
 					checkbox.type = "checkbox";
 					checkbox.style = " width: 15px; height: 15px";
