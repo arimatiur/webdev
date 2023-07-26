@@ -45,10 +45,10 @@
 					style="display: flex; flex-direction: row; align-items: center"
 				>
 					<div class="col-md-0">
-						<img
+						<!-- <img
 							src="https://jakartasatu.jakarta.go.id/portal/sharing/rest/content/items/77be3b899cd6463aad512e81544351a8/data"
 							style="width: 75.6px; height: 81.2px"
-						/>
+						/> -->
 					</div>
 					<div
 						style="text-align: left; display: flex; flex-direction: column"
@@ -71,18 +71,23 @@
 				<!-- Side Panel -->
 				<div class="col-md-3" id="left-column" style="height: 100%">
 					<h5 style="text-align: center">Cari ID PBG</h5>
-					<input
-						type="text"
-						id="filterInput"
-						class="form-control mb-2"
-						placeholder="Cari PDF..."
-					/>
+					<div class="input-group mb-3">
+						<input
+							type="text"
+							class="form-control"
+							placeholder="Cari PDF..."
+							id="filterInput"
+						/>
+						<button class="btn btn-secondary" type="button" id="searchButton">
+							Cari
+						</button>
+					</div>
 
 					<!-- Static HTML representation of the PDF table -->
 					<div class="bg-light p-0" style="height: 75%; overflow-y: scroll">
 						<table class="table table-hover">
 							<thead>
-								<tr style="font-size: small;">
+								<tr style="font-size: small">
 									<th scope="col">#</th>
 									<th scope="col">PDF</th>
 									<th scope="col">Simpan</th>
@@ -95,9 +100,7 @@
 					</div>
 
 					<div class="center">
-						<button class="btn btn-success btn-lg" id="submit-button">
-							Submit
-						</button>
+						<button class="btn btn-success" id="submit-button">Submit</button>
 					</div>
 				</div>
 
@@ -123,64 +126,55 @@
 				});
 
 				const tableTBody = document.getElementById("table-body");
-
 				const pdfViewer = document.getElementById("pdf-viewer");
 
-				const pdfFolder = "pdf/";
+				const text1 =
+					"http://10.1.2.103///apijakartasatu/web/simbg-file/file?doc=";
+				const text2 = "&sudin=";
 				const checkedPDFs = new Set();
 
-				const jsonData = {
-					files: [
-						"5 Ari Matiur _GIS Development Mei 2021.pdf",
-						"7 Ari Matiur _GIS Development Juli 2021.pdf",
-						"8 Ari Matiur _GIS Development Agustus 2021.pdf",
-						"9 Ari Matiur _GIS Development September 2021.pdf",
-						"11 Ari Matiur _GIS Development November 2021.pdf",
-						"12 Ari Matiur _GIS Development Desember 2021.pdf",
-						"Ari Matiur _GIS Development Laporan Akhir Juli-Desember 2021.pdf",
-						"10 Ari Matiur _GIS Development Oktober 2022.pdf",
-						"9 Ari Matiur _GIS Development September 2022.pdf",
-						"8 Ari Matiur _GIS Development Agustus 2022.pdf",
-						"7 Ari Matiur _GIS Development Juli 2022.pdf",
-						"6 Ari Matiur _GIS Development Juni 2022.pdf",
-						"5 Ari Matiur _GIS Development Mei 2022.pdf",
-						"4 Ari Matiur _GIS Development April 2022.pdf",
-						"3 Ari Matiur _GIS Development Maret 2022.pdf",
-						"2 Ari Matiur _GIS Development Februari 2022.pdf",
-						"1 Ari Matiur _GIS Development Januari 2022.pdf",
-					],
-				};
-
-				jsonData.files.forEach((pdfFile, index) => {
-					const tr = document.createElement("tr");
-					const tdIndex = document.createElement("td");
-					tdIndex.style = "font-size: small";
-					tdIndex.textContent = index + 1;
-					tr.appendChild(tdIndex);
-					const tdNama = document.createElement("td");
-					tdNama.style = "font-size: small";
-					tdNama.textContent = pdfFile;
-					tdNama.addEventListener("click", () => loadPDF(pdfFile));
-					tr.appendChild(tdNama);
-					const tdCheckBox = document.createElement("td");
-					tdCheckBox.style = "text-align: center";
-					const checkbox = document.createElement("input");
-					checkbox.type = "checkbox";
-					checkbox.style = " width: 15px; height: 15px";
-					checkbox.addEventListener("click", () => {
-						handleCheckboxClick(pdfFile);
+				async function api(urlApi) {
+					const response = await fetch(urlApi);
+					const data = await response.json();
+					data.forEach((item, index) => {
+						const doc = item.document;
+						const size = item.size;
+						const sudin = item.sudin;
+						const tr = document.createElement("tr");
+						const tdIndex = document.createElement("td");
+						tdIndex.style = "font-size: small";
+						tdIndex.textContent = index + 1;
+						tr.appendChild(tdIndex);
+						const tdNama = document.createElement("td");
+						tdNama.style = "font-size: small";
+						tdNama.innerHTML = doc + "<br>" + size + "<br>" + sudin;
+						tdNama.addEventListener("click", () =>
+							loadPDF(text1, doc, text2, sudin)
+						);
+						tr.appendChild(tdNama);
+						const tdCheckBox = document.createElement("td");
+						tdCheckBox.style = "text-align: center";
+						const checkbox = document.createElement("input");
+						checkbox.type = "checkbox";
+						checkbox.style = " width: 15px; height: 15px";
+						checkbox.addEventListener("click", () => {
+							handleCheckboxClick(doc);
+						});
+						tdCheckBox.appendChild(checkbox);
+						tr.appendChild(tdCheckBox);
+						tableTBody.appendChild(tr);
 					});
-					tdCheckBox.appendChild(checkbox);
-					tr.appendChild(tdCheckBox);
-					tableTBody.appendChild(tr);
-				});
+				}
+				api(
+					"http://10.1.2.103///apijakartasatu/web/simbg-file/list?pbgid=pbg-317101-01032023-01"
+				);
 
 				// Function to handle checkbox click
-				function handleCheckboxClick(pdfFile) {
-					if (checkedPDFs.has(pdfFile)) {
-						checkedPDFs.delete(pdfFile);
+				function handleCheckboxClick(doc) {
+					if (checkedPDFs.has(doc)) {
+						checkedPDFs.delete(doc);
 					} else {
-						checkedPDFs.add(pdfFile);
+						checkedPDFs.add(doc);
 					}
 				}
 
@@ -189,18 +183,53 @@
 					console.log("Checked PDFs:", checkedPDFs);
 				}
 
-				function loadPDF(pdfFileName) {
-					const blobURL = pdfFolder + pdfFileName;
-					pdfViewer.setAttribute("src", blobURL);
+				// Function Load PDF using AJAX
+				function loadPDF(text1, doc, text2, sudin) {
+					const url = text1 + doc + text2 + sudin;
+
+					// Create a new XMLHttpRequest object
+					const xhr = new XMLHttpRequest();
+
+					// Configure the XMLHttpRequest
+					xhr.open("GET", url, true);
+					xhr.responseType = "blob"; // Set the response type to 'blob' to handle binary data
+
+					// Set up the event handler when the request is completed
+					xhr.onload = function () {
+						if (xhr.status === 200) {
+							// Convert the response to a blob
+							const blob = xhr.response;
+
+							// Convert the blob to a URL
+							const blobURL = URL.createObjectURL(blob);
+
+							// Set the 'src' attribute of the iframe to the blob URL
+							pdfViewer.setAttribute("src", blobURL);
+						}
+					};
+
+					// Send the request
+					xhr.send();
+				}
+
+				// Function to clear the content of the tbody
+				function clearTableBody() {
+					while (tableTBody.firstChild) {
+						tableTBody.removeChild(tableTBody.firstChild);
+					}
 				}
 
 				// Function to filter the table content based on the input
 				$(document).ready(function () {
-					$("#filterInput").on("keyup", function () {
-						var value = $(this).val().toLowerCase();
+					function filterTable() {
+						var value = $("#filterInput").val().toLowerCase();
 						$("table tbody tr").filter(function () {
 							$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
 						});
+					}
+
+					$("#searchButton").on("click", function () {
+						filterTable();
 					});
 				});
 			};
