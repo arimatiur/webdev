@@ -100,7 +100,20 @@
 					</div>
 
 					<div class="center">
-						<button class="btn btn-success" id="submit-button">Submit</button>
+						<button
+							style="margin-right: 20px"
+							class="btn btn-success"
+							id="submit-button"
+						>
+							Submit
+						</button>
+						<button
+							style="margin-left: 20px"
+							class="btn btn-info"
+							id="clear-button"
+						>
+							Clear
+						</button>
 					</div>
 				</div>
 
@@ -120,57 +133,70 @@
 
 		<script>
 			window.onload = function () {
-				const submitButton = document.getElementById("submit-button");
-				submitButton.addEventListener("click", () => {
-					printCheckedPDFs();
+				const button = document.getElementById("searchButton");
+				button.addEventListener("click", () => {
+					const apiList =
+						"http://10.1.2.103///apijakartasatu/web/simbg-file/list?pbgid=";
+					var idPBG = $("#filterInput").val();
+					const urlApi = apiList + idPBG;
+					const tableTBody = document.getElementById("table-body");
+					const text1 =
+						"http://10.1.2.103///apijakartasatu/web/simbg-file/file?doc=";
+					const text2 = "&sudin=";
+					let checkedPDFs;
+					async function api(urlApi) {
+						const response = await fetch(urlApi);
+						const data = await response.json();
+
+						const tableTBody = document.getElementById("table-body");
+						const pdfViewer = document.getElementById("pdf-viewer");
+
+						while (tableTBody.firstChild) {
+							tableTBody.removeChild(tableTBody.firstChild);
+						}
+						pdfViewer.setAttribute("src", "");
+						checkedPDFs = new Set();
+
+						data.forEach((item, index) => {
+							const doc = item.document;
+							const size = item.size;
+							const sudin = item.sudin;
+							const tr = document.createElement("tr");
+							const tdIndex = document.createElement("td");
+							tdIndex.style = "font-size: small";
+							tdIndex.textContent = index + 1;
+							tr.appendChild(tdIndex);
+							const tdNama = document.createElement("td");
+							tdNama.style = "font-size: small";
+							tdNama.innerHTML = doc + "<br>" + size + "<br>" + sudin;
+							tdNama.addEventListener("click", () =>
+								loadPDF(text1, doc, text2, sudin)
+							);
+							tr.appendChild(tdNama);
+							const tdCheckBox = document.createElement("td");
+							tdCheckBox.style = "text-align: center";
+							const checkbox = document.createElement("input");
+							checkbox.type = "checkbox";
+							checkbox.style = " width: 15px; height: 15px";
+							checkbox.addEventListener("click", () => {
+								handleCheckboxClick(doc, checkedPDFs);
+							});
+							tdCheckBox.appendChild(checkbox);
+							tr.appendChild(tdCheckBox);
+							tableTBody.appendChild(tr);
+						});
+
+						const submitButton = document.getElementById("submit-button");
+						submitButton.addEventListener("click", () => {
+							const link = printCheckedPDFs(checkedPDFs);
+							open(link);
+						});
+					}
+					api(urlApi);
 				});
 
-				const tableTBody = document.getElementById("table-body");
-				const pdfViewer = document.getElementById("pdf-viewer");
-
-				const text1 =
-					"http://10.1.2.103///apijakartasatu/web/simbg-file/file?doc=";
-				const text2 = "&sudin=";
-				const checkedPDFs = new Set();
-
-				async function api(urlApi) {
-					const response = await fetch(urlApi);
-					const data = await response.json();
-					data.forEach((item, index) => {
-						const doc = item.document;
-						const size = item.size;
-						const sudin = item.sudin;
-						const tr = document.createElement("tr");
-						const tdIndex = document.createElement("td");
-						tdIndex.style = "font-size: small";
-						tdIndex.textContent = index + 1;
-						tr.appendChild(tdIndex);
-						const tdNama = document.createElement("td");
-						tdNama.style = "font-size: small";
-						tdNama.innerHTML = doc + "<br>" + size + "<br>" + sudin;
-						tdNama.addEventListener("click", () =>
-							loadPDF(text1, doc, text2, sudin)
-						);
-						tr.appendChild(tdNama);
-						const tdCheckBox = document.createElement("td");
-						tdCheckBox.style = "text-align: center";
-						const checkbox = document.createElement("input");
-						checkbox.type = "checkbox";
-						checkbox.style = " width: 15px; height: 15px";
-						checkbox.addEventListener("click", () => {
-							handleCheckboxClick(doc);
-						});
-						tdCheckBox.appendChild(checkbox);
-						tr.appendChild(tdCheckBox);
-						tableTBody.appendChild(tr);
-					});
-				}
-				api(
-					"http://10.1.2.103///apijakartasatu/web/simbg-file/list?pbgid=pbg-317101-01032023-01"
-				);
-
 				// Function to handle checkbox click
-				function handleCheckboxClick(doc) {
+				function handleCheckboxClick(doc, checkedPDFs) {
 					if (checkedPDFs.has(doc)) {
 						checkedPDFs.delete(doc);
 					} else {
@@ -179,8 +205,14 @@
 				}
 
 				//Function Submit Button
-				function printCheckedPDFs() {
+				function printCheckedPDFs(checkedPDFs) {
 					console.log("Checked PDFs:", checkedPDFs);
+					const text3 =
+						"http://10.1.2.103///apijakartasatu/web/simbg-file/submit?pbgid=pbg-317101-01032023-01&list=[";
+					const text4 = Array.from(checkedPDFs).join(",");
+					const postLink = text3 + text4 + "]";
+					return postLink
+					
 				}
 
 				// Function Load PDF using AJAX
@@ -204,6 +236,7 @@
 							const blobURL = URL.createObjectURL(blob);
 
 							// Set the 'src' attribute of the iframe to the blob URL
+							const pdfViewer = document.getElementById("pdf-viewer");
 							pdfViewer.setAttribute("src", blobURL);
 						}
 					};
@@ -211,27 +244,6 @@
 					// Send the request
 					xhr.send();
 				}
-
-				// Function to clear the content of the tbody
-				function clearTableBody() {
-					while (tableTBody.firstChild) {
-						tableTBody.removeChild(tableTBody.firstChild);
-					}
-				}
-
-				// Function to filter the table content based on the input
-				$(document).ready(function () {
-					function filterTable() {
-						var value = $("#filterInput").val().toLowerCase();
-						$("table tbody tr").filter(function () {
-							$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
-						});
-					}
-
-					$("#searchButton").on("click", function () {
-						filterTable();
-					});
-				});
 			};
 		</script>
 	</body>
