@@ -45,10 +45,10 @@
 					style="display: flex; flex-direction: row; align-items: center"
 				>
 					<div class="col-md-0">
-						<img
+						<!-- <img
 							src="https://jakartasatu.jakarta.go.id/portal/sharing/rest/content/items/77be3b899cd6463aad512e81544351a8/data"
 							style="width: 75.6px; height: 81.2px"
-						/>
+						/> -->
 					</div>
 					<div
 						style="text-align: left; display: flex; flex-direction: column"
@@ -134,6 +134,21 @@
 		<script>
 			window.onload = function () {
 				const button = document.getElementById("searchButton");
+
+				const submitButton = document.getElementById("submit-button");
+				submitButton.addEventListener("click", () => {
+					clearTableBody();
+					const sideTable = document.getElementById("sideTable");
+					let link = printCheckedPDFs(checkedPDFs);
+					getData(link);
+					link = "";
+				});
+
+				const clearButton = document.getElementById("clear-button");
+				clearButton.addEventListener("click", () => {
+					clearTableBody();
+				});
+
 				button.addEventListener("click", () => {
 					const apiList =
 						"http://10.1.2.103///apijakartasatu/web/simbg-file/list?pbgid=";
@@ -205,23 +220,6 @@
 
 									tableTBody.appendChild(tr);
 								});
-
-								const submitButton = document.getElementById("submit-button");
-								submitButton.addEventListener("click", () => {
-									clearTableBody();
-									const sideTable = document.getElementById("sideTable");
-									const link = printCheckedPDFs(checkedPDFs);
-									const listIframe = document.createElement("iframe");
-									listIframe.setAttribute("src", "link");
-									sideTable.appendChild(listIframe);
-									// open(link);
-									getData(link);
-								});
-
-								const clearButton = document.getElementById("clear-button");
-								clearButton.addEventListener("click", () => {
-									clearTableBody();
-								});
 							} else {
 								const trEmpty = document.createElement("tr");
 								const tdEmpty = document.createElement("td");
@@ -262,7 +260,7 @@
 					checkedPDFs = new Set();
 				}
 
-				//Function for Submit Button
+				//Function Submit Button
 				function printCheckedPDFs(checkedPDFs) {
 					const text3 =
 						"http://10.1.2.103///apijakartasatu/web/simbg-file/submit?pbgid=pbg-317101-01032023-01&list=[";
@@ -271,7 +269,7 @@
 					return postLink;
 				}
 
-				//Function to Get Status from post and create Data Sent Element
+				//Function Get Status from post
 				function getData(link) {
 					console.log(link);
 					fetch(link)
