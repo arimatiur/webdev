@@ -110,7 +110,7 @@
 					<div class="center">
 						<form
 							action="/action_page.php"
-							style="width: 100%; display: flex; flex-direction: row"
+							style="width: 100%; display: flex; flex-direction: row; justify-content:center"
 						>
 							<input
 								type="text"
@@ -119,14 +119,14 @@
 								value=""
 							/>
 							<input
-								style="margin-right: 20px"
+								style="margin-right: 30px"
 								class="btn btn-success"
 								id="submit-button"
 								type="button"
 								value="Submit"
 							/>
 							<input
-								style="margin-left: 20px"
+								style="margin-left: 30px"
 								class="btn btn-info"
 								id="clear-button"
 								type="button"
@@ -193,6 +193,9 @@
 									const size = item.size;
 									const sudin = item.sudin;
 									const tr = document.createElement("tr");
+									if ((index + 1) % 2 == 0) {
+										tr.style = "background-color: #e5e5e5";
+									}
 
 									const tdIndex = document.createElement("td");
 									tdIndex.style = "font-size: small";
@@ -204,7 +207,6 @@
 									tdNama.style = "font-size: small";
 
 									const docSpan = document.createElement("span");
-									docSpan.style.backgroundColor = "lightgray";
 									docSpan.innerText = doc;
 
 									pNama.appendChild(docSpan);
