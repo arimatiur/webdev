@@ -72,15 +72,23 @@
 				<div class="col-md-4" id="left-column" style="height: 100%">
 					<h5 style="text-align: center">Cari ID PBG</h5>
 					<div class="input-group mb-3">
-						<input
-							type="text"
-							class="form-control"
-							placeholder="Cari PDF..."
-							id="filterInput"
-						/>
-						<button class="btn btn-secondary" type="button" id="searchButton">
-							Cari
-						</button>
+						<form
+							action="/action_page.php"
+							style="width: 100%; display: flex; flex-direction: row"
+						>
+							<input
+								type="text"
+								class="form-control"
+								placeholder="Cari PDF..."
+								id="filterInput"
+							/>
+							<input
+								type="button"
+								class="btn btn-secondary"
+								id="searchButton"
+								value="Cari"
+							/>
+						</form>
 					</div>
 
 					<!-- Static HTML representation of the PDF table -->
@@ -100,20 +108,31 @@
 					</div>
 
 					<div class="center">
-						<button
-							style="margin-right: 20px"
-							class="btn btn-success"
-							id="submit-button"
+						<form
+							action="/action_page.php"
+							style="width: 100%; display: flex; flex-direction: row"
 						>
-							Submit
-						</button>
-						<button
-							style="margin-left: 20px"
-							class="btn btn-info"
-							id="clear-button"
-						>
-							Clear
-						</button>
+							<input
+								type="text"
+								style="display: none"
+								id="list-input"
+								value=""
+							/>
+							<input
+								style="margin-right: 20px"
+								class="btn btn-success"
+								id="submit-button"
+								type="button"
+								value="Submit"
+							/>
+							<input
+								style="margin-left: 20px"
+								class="btn btn-info"
+								id="clear-button"
+								type="button"
+								value="Clear"
+							/>
+						</form>
 					</div>
 				</div>
 
@@ -132,24 +151,16 @@
 		</div>
 
 		<script>
+			let checkedPDFs = new Set();
 			window.onload = function () {
-				const button = document.getElementById("searchButton");
-
-				const submitButton = document.getElementById("submit-button");
-				submitButton.addEventListener("click", () => {
-					clearTableBody();
-					const sideTable = document.getElementById("sideTable");
-					let link = printCheckedPDFs(checkedPDFs);
-					getData(link);
-					link = "";
-				});
-
 				const clearButton = document.getElementById("clear-button");
 				clearButton.addEventListener("click", () => {
-					clearTableBody();
+					clearTableBody(checkedPDFs);
+					checkedPDFs.clear();
 				});
 
-				button.addEventListener("click", () => {
+				const searchButton = document.getElementById("searchButton");
+				searchButton.addEventListener("click", () => {
 					const apiList =
 						"http://10.1.2.103///apijakartasatu/web/simbg-file/list?pbgid=";
 					var idPBG = document.getElementById("filterInput").value;
@@ -158,9 +169,10 @@
 					const text1 =
 						"http://10.1.2.103///apijakartasatu/web/simbg-file/file?doc=";
 					const text2 = "&sudin=";
-					let checkedPDFs;
 
-					async function api(urlApi) {
+					checkedPDFs.clear();
+
+					async function api(urlApi, checkedPDFs) {
 						try {
 							const response = await fetch(urlApi);
 							const data = await response.json();
@@ -172,7 +184,7 @@
 								tableTBody.removeChild(tableTBody.firstChild);
 							}
 							pdfViewer.setAttribute("src", "");
-							checkedPDFs = new Set();
+							// checkedPDFs = new Set();
 
 							// Check if the data is not empty
 							if (data && data.length > 0) {
@@ -214,6 +226,7 @@
 									checkbox.style = "width: 15px; height: 15px";
 									checkbox.addEventListener("click", () => {
 										handleCheckboxClick(doc, checkedPDFs);
+										console.log(checkedPDFs);
 									});
 									tdCheckBox.appendChild(checkbox);
 									tr.appendChild(tdCheckBox);
@@ -236,7 +249,17 @@
 							console.log("failed");
 						}
 					}
-					api(urlApi);
+					api(urlApi, checkedPDFs);
+				});
+
+				const submitButton = document.getElementById("submit-button");
+				submitButton.addEventListener("click", () => {
+					const sideTable = document.getElementById("sideTable");
+					let link = printCheckedPDFs(checkedPDFs);
+					console.log(document.getElementById("list-input").value);
+					getData(link);
+					link = "";
+					checkedPDFs.clear();
 				});
 
 				// Function to handle checkbox click
@@ -249,7 +272,7 @@
 				}
 
 				// Function to clear the content of the tbody and the iframe
-				function clearTableBody() {
+				function clearTableBody(checkedPDFs) {
 					var tableTBody = document.getElementById("table-body");
 					var pdfViewer = document.getElementById("pdf-viewer");
 
@@ -257,7 +280,7 @@
 						tableTBody.removeChild(tableTBody.firstChild);
 					}
 					pdfViewer.setAttribute("src", "");
-					checkedPDFs = new Set();
+					checkedPDFs.clear();
 				}
 
 				//Function Submit Button
@@ -265,7 +288,10 @@
 					const text3 =
 						"http://10.1.2.103///apijakartasatu/web/simbg-file/submit?pbgid=pbg-317101-01032023-01&list=[";
 					const text4 = Array.from(checkedPDFs).join(",");
+					console.log(text4);
 					const postLink = text3 + text4 + "]";
+					console.log(checkedPDFs);
+					document.getElementById("list-input").value = text4;
 					return postLink;
 				}
 
@@ -298,7 +324,7 @@
 							} else {
 								// Data is plain text
 								console.log("Non-JSON response:", data);
-								clearTableBody();
+								clearTableBody(checkedPDFs);
 								var tableTBody = document.getElementById("table-body");
 								const trSuccess = document.createElement("tr");
 								const tdSuccess = document.createElement("td");
