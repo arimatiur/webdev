@@ -1,432 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung</title>
-		<link
-			rel="stylesheet"
-			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-		/>
-		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/build/pdf.min.js"></script>
-		<link
-			rel="stylesheet"
-			href="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/web/pdf_viewer.min.css"
-		/>
-		<style>
-			::-webkit-scrollbar {
-				width: 10px;
-			}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/build/pdf.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/web/pdf_viewer.min.css"
+    />
+    <style>
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
 
-			::-webkit-scrollbar-track {
-				background: #f1f1f1;
-			}
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
 
-			::-webkit-scrollbar-thumb {
-				background: #888;
-			}
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
 
-			::-webkit-scrollbar-thumb:hover {
-				background: #555;
-			}
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
 
-			.center {
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				height: 10%;
-			}
-			.even-row {
-				background-color: #efeaea;
-			}
-			.table.table-hover tbody tr:hover {
-				background-color: #cec7e2;
-			}
-		</style>
-	</head>
+      .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 10%;
+      }
+      .even-row {
+        background-color: #efeaea;
+      }
+      .table.table-hover tbody tr:hover {
+        background-color: #cec7e2;
+      }
+    </style>
+  </head>
 
-	<body onload="zoom()">
-		<div class="container-fluid">
-			<!-- Header -->
-			<div class="row bg-dark text-white py-3" style="display: flex">
-				<div
-					class="col"
-					style="display: flex; flex-direction: row; align-items: center"
-				>
-					<div class="col-md-0">
-						<!-- <img
+  <body onload="zoom()">
+    <div class="container-fluid">
+      <!-- Header -->
+      <div class="row bg-dark text-white py-3" style="display: flex">
+        <div
+          class="col"
+          style="display: flex; flex-direction: row; align-items: center"
+        >
+          <div class="col-md-0">
+            <!-- <img
 							src="https://jakartasatu.jakarta.go.id/portal/sharing/rest/content/items/77be3b899cd6463aad512e81544351a8/data"
 							style="width: 75.6px; height: 81.2px"
 						/> -->
-					</div>
-					<div
-						style="text-align: left; display: flex; flex-direction: column"
-						class="col-md-10"
-					>
-						<h4>
-							Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung
-						</h4>
-						<h4>Dinas Cipta Karya Tata Ruang Pertanahan</h4>
-					</div>
-					<div style="text-align: right" class="col-md-1">
-						<button type="button" class="btn btn-primary btn-sm">
-							Sign Out
-						</button>
-					</div>
-				</div>
-			</div>
+          </div>
+          <div
+            style="text-align: left; display: flex; flex-direction: column"
+            class="col-md-10"
+          >
+            <h4>
+              Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung
+            </h4>
+            <h4>Dinas Cipta Karya Tata Ruang Pertanahan</h4>
+          </div>
+          <div style="text-align: right" class="col-md-1">
+            <button type="button" class="btn btn-primary btn-sm">
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </div>
 
-			<div class="row mt-3" style="height: 83vh">
-				<!-- Side Panel -->
-				<div class="col-md-4" id="left-column" style="height: 100%">
-					<h5 style="text-align: center">Cari ID PBG</h5>
-					<div class="input-group mb-3">
-						<input
-							type="text"
-							class="form-control"
-							placeholder="Cari PDF..."
-							id="filterInput"
-						/>
-						<button class="btn btn-secondary" type="button" id="searchButton">
-							Cari
-						</button>
-					</div>
+      <div class="row mt-3" style="height: 83vh">
+        <!-- Side Panel -->
+        <div class="col-md-4" id="left-column" style="height: 100%">
+          <h5 style="text-align: center">Cari ID PBG</h5>
+          <div class="input-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Cari PDF..."
+              id="filterInput"
+            />
+            <button class="btn btn-secondary" type="button" id="searchButton">
+              Cari
+            </button>
+          </div>
 
-					<!-- Static HTML representation of the PDF table -->
-					<div class="bg-light p-0" style="height: 75%; overflow-y: scroll">
-						<table class="table table-hover" id="sideTable">
-							<thead>
-								<tr style="font-size: small">
-									<th scope="col">#</th>
-									<th scope="col">SIMPAN</th>
-									<th scope="col" colspan="3">PDF</th>
-								</tr>
-							</thead>
-							<tbody id="table-body">
-								<!-- The table rows for PDFs will be dynamically created in JavaScript -->
-							</tbody>
-						</table>
-					</div>
+          <!-- Static HTML representation of the PDF table -->
+          <div class="bg-light p-0" style="height: 75%; overflow-y: scroll">
+            <table class="table table-hover" id="sideTable">
+              <thead>
+                <tr style="font-size: small">
+                  <th scope="col">#</th>
+                  <th scope="col">SIMPAN</th>
+                  <th scope="col" colspan="3">PDF</th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+                <!-- The table rows for PDFs will be dynamically created in JavaScript -->
+              </tbody>
+            </table>
+          </div>
 
-					<div class="center">
-						<button
-							style="margin-right: 20px"
-							class="btn btn-success"
-							id="submit-button"
-						>
-							Submit
-						</button>
-						<button
-							style="margin-left: 20px"
-							class="btn btn-info"
-							id="clear-button"
-						>
-							Clear
-						</button>
-					</div>
-				</div>
+          <div class="center">
+            <button
+              style="margin-right: 20px"
+              class="btn btn-success"
+              id="submit-button"
+            >
+              Submit
+            </button>
+            <button
+              style="margin-left: 20px"
+              class="btn btn-info"
+              id="clear-button"
+            >
+              Clear
+            </button>
+          </div>
+        </div>
 
-				<!-- Main Content -->
-				<div class="col-md-8" id="right-column">
-					<div class="bg-info p-0" style="height: 100%">
-						<!-- PDF viewer iframe -->
-						<iframe
-							src="./pdf/SIMBG.pdf"
-							style="align-items: center; width: 100%; height: 100%"
-							id="pdf-viewer"
-						></iframe>
-					</div>
-				</div>
-			</div>
-		</div>
+        <!-- Main Content -->
+        <div class="col-md-8" id="right-column">
+          <div class="bg-info p-0" style="height: 100%">
+            <!-- PDF viewer iframe -->
+            <iframe
+              src="./pdf/SIMBG.pdf"
+              style="align-items: center; width: 100%; height: 100%"
+              id="pdf-viewer"
+            ></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
 
-		<script>
-			let checkedPDFs = new Set();
-			window.onload = function () {
-				const clearButton = document.getElementById("clear-button");
-				clearButton.addEventListener("click", () => {
-					clearTableBody(checkedPDFs);
-					checkedPDFs.clear();
-				});
+    <script>
+      let checkedPDFs = new Set();
+      window.onload = function () {
+        const clearButton = document.getElementById("clear-button");
+        clearButton.addEventListener("click", () => {
+          clearTableBody(checkedPDFs);
+          checkedPDFs.clear();
+        });
 
-				const searchButton = document.getElementById("searchButton");
-				searchButton.addEventListener("click", () => {
-					const apiList =
-						"http://10.1.2.103///apijakartasatu/web/simbg-file/list?pbgid=";
-					var idPBG = document.getElementById("filterInput").value;
-					const urlApi = apiList + idPBG;
-					const tableTBody = document.getElementById("table-body");
-					const text1 =
-						"http://10.1.2.103///apijakartasatu/web/simbg-file/file?doc=";
-					const text2 = "&sudin=";
+        const searchButton = document.getElementById("searchButton");
+        searchButton.addEventListener("click", () => {
+          const apiList =
+            "http://10.1.2.103///apijakartasatu/web/simbg-file/list?pbgid=";
+          var idPBG = document.getElementById("filterInput").value;
+          const urlApi = apiList + idPBG;
+          const tableTBody = document.getElementById("table-body");
+          const text1 =
+            "http://10.1.2.103///apijakartasatu/web/simbg-file/file?doc=";
+          const text2 = "&sudin=";
 
-					checkedPDFs.clear();
+          checkedPDFs.clear();
 
-					async function api(urlApi, checkedPDFs) {
-						try {
-							const response = await fetch(urlApi);
-							const data = await response.json();
+          async function api(urlApi, checkedPDFs) {
+            try {
+              const response = await fetch(urlApi);
+              const data = await response.json();
 
-							var tableTBody = document.getElementById("table-body");
-							var pdfViewer = document.getElementById("pdf-viewer");
+              var tableTBody = document.getElementById("table-body");
+              var pdfViewer = document.getElementById("pdf-viewer");
 
-							while (tableTBody.firstChild) {
-								tableTBody.removeChild(tableTBody.firstChild);
-							}
-							pdfViewer.setAttribute("src", "./pdf/SIMBG.pdf");
+              while (tableTBody.firstChild) {
+                tableTBody.removeChild(tableTBody.firstChild);
+              }
+              pdfViewer.setAttribute("src", "./pdf/SIMBG.pdf");
 
-							// Check if the data is not empty
-							if (data && data.length > 0) {
-								data.forEach((item, index) => {
-									const fileName = item.filename;
-									const doc = item.document;
-									const size = item.size;
-									const sudin = item.sudin;
-									const tr = document.createElement("tr");
-									if ((index + 1) % 2 == 0) {
-										tr.classList.add("even-row");
-									}
+              // Check if the data is not empty
+              if (data && data.length > 0) {
+                data.forEach((item, index) => {
+                  const fileName = item.filename;
+                  const doc = item.document;
+                  const size = item.size;
+                  const sudin = item.sudin;
 
-									const trTitle = document.createElement("tr");
+                  const trTitle = document.createElement("tr");
+                  if ((index + 1) % 2 == 0) {
+                    trTitle.classList.add("even-row");
+                  }
 
-									const tdNomor = document.createElement("td");
-									tdNomor.rowSpan = 2;
-									tdNomor.innerHTML = "Nomor";
-									tdNomor.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap";
-									trTitle.appendChild(tdNomor);
+                  const tdNomor = document.createElement("td");
+                  tdNomor.rowSpan = 2;
+                  tdNomor.innerHTML = index;
+                  tdNomor.style =
+                    "font-size: small; vertical-align: middle; white-space: nowrap";
+                  trTitle.appendChild(tdNomor);
 
-									const tdCheckBox = document.createElement("td");
-									tdCheckBox.rowSpan = 2;
-									tdCheckBox.innerHTML = "Checkbox";
-									tdCheckBox.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap";
-									trTitle.appendChild(tdCheckBox);
+                  const tdCheckBox = document.createElement("td");
+                  tdCheckBox.rowSpan = 2;
+                  tdCheckBox.style =
+                    "font-size: small; vertical-align: middle; white-space: nowrap";
+                  const checkbox = document.createElement("input");
+                  checkbox.type = "checkbox";
+                  checkbox.style = "width: 20px; height: 20px";
+                  checkbox.addEventListener("click", () => {
+                    handleCheckboxClick(doc, checkedPDFs);
+                  });
+                  tdCheckBox.appendChild(checkbox);
+                  trTitle.appendChild(tdCheckBox);
 
-									const tdDokumen = document.createElement("td");
-									tdDokumen.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap";
-									tdDokumen.innerHTML = "Dokumen";
-									trTitle.appendChild(tdDokumen);
+                  const tdDokumen = document.createElement("td");
+                  tdDokumen.style =
+                    "font-size: small; vertical-align: middle; white-space: nowrap";
+                  tdDokumen.innerHTML = "Dokumen";
+                  trTitle.appendChild(tdDokumen);
 
-									const tdGambar = document.createElement("td");
-									tdGambar.innerHTML = "Dokumen Gambar Perencanaan";
-									tdGambar.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap";
-										tdGambar.colSpan = 2;
-									trTitle.appendChild(tdGambar);
+                  const tdGambar = document.createElement("td");
+                  tdGambar.innerHTML = fileName;
+                  tdGambar.style =
+                    "font-size: small; vertical-align: middle; white-space: nowrap";
+                  tdGambar.colSpan = 2;
+                  trTitle.appendChild(tdGambar);
 
-									tableTBody.appendChild(trTitle);
+                  tableTBody.appendChild(trTitle);
 
-									const trValue = document.createElement("tr");
+                  const trValue = document.createElement("tr");
+                  if ((index + 1) % 2 == 0) {
+                    trValue.classList.add("even-row");
+                  }
 
-									const tdDetil = document.createElement("td");
-									tdDetil.innerHTML = "Detil";
-									tdDetil.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap";
-									trValue.appendChild(tdDetil);
+                  const tdDetil = document.createElement("td");
+                  tdDetil.innerHTML = "Detil";
+                  tdDetil.style =
+                    "font-size: small; vertical-align: middle; white-space: nowrap";
+                  trValue.appendChild(tdDetil);
 
-									const tdPropName = document.createElement("td");
-									tdPropName.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap";
-									tdPropName.innerHTML = "Item<br>Sudin<br>Size";
-									trValue.appendChild(tdPropName);
+                  const tdPropName = document.createElement("td");
+                  tdPropName.style =
+                    "font-size: small; vertical-align: middle; white-space: nowrap; width: 55px";
+                  tdPropName.innerHTML = "Item<br>Sudin<br>Size";
+                  trValue.appendChild(tdPropName);
 
-									const tdPropValue = document.createElement("td");
-									tdPropValue.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap";
-									tdPropValue.innerHTML = ": iTEM <br>: sUDIN <br>: sIZE";
-									trValue.appendChild(tdPropValue);
+                  const tdPropValue = document.createElement("td");
+                  tdPropValue.style =
+                    "font-size: small; vertical-align: middle; white-space: nowrap";
+                  tdPropValue.innerHTML =
+                    ": " + doc + " <br>: " + sudin + " <br>: " + size;
+                  tdPropValue.addEventListener("click", () =>
+                    loadPDF(text1, doc, text2, sudin)
+                  );
+                  trValue.appendChild(tdPropValue);
 
-									tableTBody.appendChild(trValue);
+                  tableTBody.appendChild(trValue);
+                });
+              } else {
+                const trEmpty = document.createElement("tr");
+                const tdEmpty = document.createElement("td");
+                tdEmpty.style = "text-align: center; font-size: small";
+                tdEmpty.colSpan = 3;
+                tdEmpty.textContent = "Data Not Found";
+                trEmpty.appendChild(tdEmpty);
+                tableTBody.appendChild(trEmpty);
+                console.log("API response is empty or invalid");
+                console.log("failed");
+              }
+            } catch (error) {
+              console.error("An error occurred during the fetch:", error);
+              console.log("failed");
+            }
+          }
+          api(urlApi, checkedPDFs);
+        });
 
-									// // Coloumnmnmm Index
-									// const tdIndex = document.createElement("td");
-									// tdIndex.style = "font-size: small; vertical-align: middle";
-									// tdIndex.textContent = index + 1;
-									// tr.appendChild(tdIndex);
+        const submitButton = document.getElementById("submit-button");
+        submitButton.addEventListener("click", () => {
+          const sideTable = document.getElementById("sideTable");
+          let link = printCheckedPDFs(checkedPDFs);
+          getData(link);
+          link = "";
+          checkedPDFs.clear();
+        });
 
-									// // Coloumnmnmm Checkbox
-									// const tdCheckBox = document.createElement("td");
-									// tdCheckBox.style =
-									// 	"text-align: center; vertical-align: middle";
-									// const checkbox = document.createElement("input");
-									// checkbox.type = "checkbox";
-									// checkbox.style = "width: 20px; height: 20px";
-									// checkbox.addEventListener("click", () => {
-									// 	handleCheckboxClick(doc, checkedPDFs);
-									// });
-									// tdCheckBox.appendChild(checkbox);
-									// tr.appendChild(tdCheckBox);
+        // Function to handle checkbox click
+        function handleCheckboxClick(doc, checkedPDFs) {
+          if (checkedPDFs.has(doc)) {
+            checkedPDFs.delete(doc);
+          } else {
+            checkedPDFs.add(doc);
+          }
+        }
 
-									// // Column nama document
-									// const tdFileName = document.createElement("td");
-									// tdFileName.style = "font-size: small; vertical-align: middle";
-									// tdFileName.textContent = fileName;
-									// tr.appendChild(tdFileName);
+        // Function to clear the content of the tbody and the iframe
+        function clearTableBody(checkedPDFs) {
+          var tableTBody = document.getElementById("table-body");
+          var pdfViewer = document.getElementById("pdf-viewer");
 
-									// // Coloumnmnmm PropName
-									// const nameTxt = "Nama : ";
-									// const sizeTxt = "Size : ";
-									// const sudinTxt = "Sudin : ";
-									// const tdPropName = document.createElement("td");
-									// tdPropName.style = "font-size: small; vertical-align: middle";
-									// tdPropName.style.whiteSpace = "nowrap";
+          while (tableTBody.firstChild) {
+            tableTBody.removeChild(tableTBody.firstChild);
+          }
+          pdfViewer.setAttribute("src", "./pdf/SIMBG.pdf");
+          checkedPDFs.clear();
+        }
 
-									// tdPropName.innerHTML =
-									// 	nameTxt + "<br>" + sizeTxt + "<br>" + sudinTxt;
-									// tr.appendChild(tdPropName);
+        //Function Submit Button
+        function printCheckedPDFs(checkedPDFs) {
+          const text3 =
+            "http://10.1.2.103///apijakartasatu/web/simbg-file/submit?pbgid=pbg-317101-01032023-01&list=[";
+          const text4 = Array.from(checkedPDFs).join(",");
+          const postLink = text3 + text4 + "]";
+          return postLink;
+        }
 
-									// // Coloumnmnmm PropValue
-									// const tdNama = document.createElement("td");
-									// tdNama.style =
-									// 	"font-size: small; vertical-align: middle; white-space: nowrap";
-									// tdNama.innerHTML = doc + "<br>" + size + "<br>" + sudin;
-									// tdNama.addEventListener("click", () =>
-									// 	loadPDF(text1, doc, text2, sudin)
-									// );
-									// tr.appendChild(tdNama);
+        //Function Get Status from post
+        function getData(link) {
+          fetch(link)
+            .then((res) => {
+              // Check if the response is successful (status 200-299)
+              if (res.ok) {
+                // Check the content type of the response
+                const contentType = res.headers.get("content-type");
+                if (contentType && contentType.includes("application/json")) {
+                  // If the response is JSON, parse it as JSON
+                  return res.json();
+                } else {
+                  // If the response is not JSON, treat it as plain text
+                  return res.text();
+                }
+              } else {
+                // If the response is not successful, handle the error
+                throw new Error("Failed to fetch data.");
+              }
+            })
+            .then((data) => {
+              // Check if the data is valid JSON
+              if (typeof data === "object") {
+                // Data is JSON
+                console.log(data);
+              } else {
+                // Data is plain text
+                // console.log(data);
+                clearTableBody(checkedPDFs);
+                var tableTBody = document.getElementById("table-body");
+                const trSuccess = document.createElement("tr");
+                const tdSuccess = document.createElement("td");
+                tdSuccess.style = "text-align: center; font-size: small";
+                tdSuccess.colSpan = 3;
+                tdSuccess.textContent = "Data Sent!";
+                trSuccess.appendChild(tdSuccess);
+                tableTBody.appendChild(trSuccess);
+              }
+            })
+            .catch((error) => {
+              console.error("An error occurred during the fetch:", error);
+            });
+        }
 
-									// tableTBody.appendChild(tr);
-								});
-							} else {
-								const trEmpty = document.createElement("tr");
-								const tdEmpty = document.createElement("td");
-								tdEmpty.style = "text-align: center; font-size: small";
-								tdEmpty.colSpan = 3;
-								tdEmpty.textContent = "Data Not Found";
-								trEmpty.appendChild(tdEmpty);
-								tableTBody.appendChild(trEmpty);
-								console.log("API response is empty or invalid");
-								console.log("failed");
-							}
-						} catch (error) {
-							console.error("An error occurred during the fetch:", error);
-							console.log("failed");
-						}
-					}
-					api(urlApi, checkedPDFs);
-				});
+        // Function Load PDF using AJAX
+        function loadPDF(text1, doc, text2, sudin) {
+          const url = text1 + doc + text2 + sudin;
 
-				const submitButton = document.getElementById("submit-button");
-				submitButton.addEventListener("click", () => {
-					const sideTable = document.getElementById("sideTable");
-					let link = printCheckedPDFs(checkedPDFs);
-					getData(link);
-					link = "";
-					checkedPDFs.clear();
-				});
+          // Create a new XMLHttpRequest object
+          const xhr = new XMLHttpRequest();
 
-				// Function to handle checkbox click
-				function handleCheckboxClick(doc, checkedPDFs) {
-					if (checkedPDFs.has(doc)) {
-						checkedPDFs.delete(doc);
-					} else {
-						checkedPDFs.add(doc);
-					}
-				}
+          // Configure the XMLHttpRequest
+          xhr.open("GET", url, true);
+          xhr.responseType = "blob"; // Set the response type to 'blob' to handle binary data
 
-				// Function to clear the content of the tbody and the iframe
-				function clearTableBody(checkedPDFs) {
-					var tableTBody = document.getElementById("table-body");
-					var pdfViewer = document.getElementById("pdf-viewer");
+          // Set up the event handler when the request is completed
+          xhr.onload = function () {
+            if (xhr.status === 200) {
+              // Convert the response to a blob
+              const blob = xhr.response;
 
-					while (tableTBody.firstChild) {
-						tableTBody.removeChild(tableTBody.firstChild);
-					}
-					pdfViewer.setAttribute("src", "./pdf/SIMBG.pdf");
-					checkedPDFs.clear();
-				}
+              // Convert the blob to a URL
+              const blobURL = URL.createObjectURL(blob);
 
-				//Function Submit Button
-				function printCheckedPDFs(checkedPDFs) {
-					const text3 =
-						"http://10.1.2.103///apijakartasatu/web/simbg-file/submit?pbgid=pbg-317101-01032023-01&list=[";
-					const text4 = Array.from(checkedPDFs).join(",");
-					const postLink = text3 + text4 + "]";
-					return postLink;
-				}
+              // Set the 'src' attribute of the iframe to the blob URL
+              const pdfViewer = document.getElementById("pdf-viewer");
+              pdfViewer.setAttribute("src", blobURL);
+            }
+          };
 
-				//Function Get Status from post
-				function getData(link) {
-					fetch(link)
-						.then((res) => {
-							// Check if the response is successful (status 200-299)
-							if (res.ok) {
-								// Check the content type of the response
-								const contentType = res.headers.get("content-type");
-								if (contentType && contentType.includes("application/json")) {
-									// If the response is JSON, parse it as JSON
-									return res.json();
-								} else {
-									// If the response is not JSON, treat it as plain text
-									return res.text();
-								}
-							} else {
-								// If the response is not successful, handle the error
-								throw new Error("Failed to fetch data.");
-							}
-						})
-						.then((data) => {
-							// Check if the data is valid JSON
-							if (typeof data === "object") {
-								// Data is JSON
-								console.log(data);
-							} else {
-								// Data is plain text
-								// console.log(data);
-								clearTableBody(checkedPDFs);
-								var tableTBody = document.getElementById("table-body");
-								const trSuccess = document.createElement("tr");
-								const tdSuccess = document.createElement("td");
-								tdSuccess.style = "text-align: center; font-size: small";
-								tdSuccess.colSpan = 3;
-								tdSuccess.textContent = "Data Sent!";
-								trSuccess.appendChild(tdSuccess);
-								tableTBody.appendChild(trSuccess);
-							}
-						})
-						.catch((error) => {
-							console.error("An error occurred during the fetch:", error);
-						});
-				}
+          // Send the request
+          xhr.send();
+        }
+      };
 
-				// Function Load PDF using AJAX
-				function loadPDF(text1, doc, text2, sudin) {
-					const url = text1 + doc + text2 + sudin;
-
-					// Create a new XMLHttpRequest object
-					const xhr = new XMLHttpRequest();
-
-					// Configure the XMLHttpRequest
-					xhr.open("GET", url, true);
-					xhr.responseType = "blob"; // Set the response type to 'blob' to handle binary data
-
-					// Set up the event handler when the request is completed
-					xhr.onload = function () {
-						if (xhr.status === 200) {
-							// Convert the response to a blob
-							const blob = xhr.response;
-
-							// Convert the blob to a URL
-							const blobURL = URL.createObjectURL(blob);
-
-							// Set the 'src' attribute of the iframe to the blob URL
-							const pdfViewer = document.getElementById("pdf-viewer");
-							pdfViewer.setAttribute("src", blobURL);
-						}
-					};
-
-					// Send the request
-					xhr.send();
-				}
-			};
-
-			function zoom() {
-				document.body.style.zoom = "80%";
-			}
-		</script>
-	</body>
+      function zoom() {
+        document.body.style.zoom = "80%";
+      }
+    </script>
+  </body>
 </html>
