@@ -1,12 +1,141 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>PDF Example by Object Tag</title>
-  </head>
-  <body>
-    <h1>PDF Example by Object Tag</h1>
-    <object data="/uploads/media/default/0001/01/540cb75550adf33f281f29132dddd14fded85bfc.pdf" type="application/pdf" width="100%" height="500px">
-      <p>Unable to display PDF file. <a href="/uploads/media/default/0001/01/540cb75550adf33f281f29132dddd14fded85bfc.pdf">Download</a> instead.</p>
-    </object>
-  </body>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>PDF.js Navigation Example</title>
+		<link
+			href="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/web/pdf_viewer.min.css"
+			rel="stylesheet"
+		/>
+		<!-- Include Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		/>
+		<style>
+			html,
+			body {
+				overflow: hidden; /* Prevent zooming of the entire page */
+				height: 100%;
+                width: 100%;
+				margin: 0;
+			}
+			#pdfCanvasContainer {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				height: 80vh; /* Set a fixed height for the PDF canvas container */
+                width: 40vw;
+				overflow: auto; /* Add scrollbars if necessary */
+				background-color: lightgray; /* Set the background color */
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container mt-5">
+			<div class="row">
+				<div class="col-md-8">
+					<div id="pdfContainer">
+						<div id="pdfCanvasContainer">
+							<canvas id="pdfCanvas"></canvas>
+						</div>
+						<div id="navigation" class="mt-3">
+							<button id="prevPage" class="btn btn-secondary">
+								Previous Page
+							</button>
+							<button id="nextPage" class="btn btn-secondary ml-2">
+								Next Page
+							</button>
+							<button id="zoomIn" class="btn btn-secondary ml-2">
+								Zoom In
+							</button>
+							<button id="zoomOut" class="btn btn-secondary ml-2">
+								Zoom Out
+							</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/build/pdf.min.js"></script>
+		<script>
+			// PDF.js setup
+			pdfjsLib.GlobalWorkerOptions.workerSrc =
+				"https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/build/pdf.worker.min.js";
+
+			// PDF viewer setup
+			const pdfContainer = document.getElementById("pdfContainer");
+			const pdfCanvasContainer = document.getElementById("pdfCanvasContainer");
+			const canvas = document.getElementById("pdfCanvas");
+			const prevPageButton = document.getElementById("prevPage");
+			const nextPageButton = document.getElementById("nextPage");
+			const zoomInButton = document.getElementById("zoomIn");
+			const zoomOutButton = document.getElementById("zoomOut");
+			let currentPage = 1;
+			let currentScale = 1; // Initial scale
+			let pdfDoc = null;
+
+			const pdfUrl = "./pdf/9 Ari Matiur _GIS Development September 2021.pdf"; // Update this to your PDF file path
+
+			// Load and render the PDF
+			pdfjsLib
+				.getDocument(pdfUrl)
+				.promise.then((doc) => {
+					pdfDoc = doc;
+					renderPage(currentPage, currentScale);
+				})
+				.catch((error) => {
+					console.error("Error loading PDF:", error);
+				});
+
+			function renderPage(pageNumber, scale) {
+				pdfDoc.getPage(pageNumber).then((page) => {
+					const viewport = page.getViewport({ scale });
+					const context = canvas.getContext("2d");
+					canvas.height = viewport.height;
+					canvas.width = viewport.width;
+
+					// Calculate the top and left offsets to center the canvas
+					const containerWidth = pdfCanvasContainer.clientWidth;
+					const containerHeight = pdfCanvasContainer.clientHeight;
+
+					const canvasLeftOffset = (containerWidth - canvas.width) / 2;
+					const canvasTopOffset = (containerHeight - canvas.height) / 2;
+
+					canvas.style.marginLeft = `${canvasLeftOffset}px`;
+					canvas.style.marginTop = `${canvasTopOffset}px`;
+
+					page.render({ canvasContext: context, viewport: viewport });
+				});
+			}
+
+			prevPageButton.addEventListener("click", () => {
+				if (currentPage > 1) {
+					currentPage--;
+					renderPage(currentPage, currentScale);
+				}
+			});
+
+			nextPageButton.addEventListener("click", () => {
+				if (currentPage < pdfDoc.numPages) {
+					currentPage++;
+					renderPage(currentPage, currentScale);
+				}
+			});
+
+			zoomInButton.addEventListener("click", () => {
+				currentScale += 0.1;
+				renderPage(currentPage, currentScale);
+			});
+
+			zoomOutButton.addEventListener("click", () => {
+				if (currentScale > 0.2) {
+					currentScale -= 0.1;
+					renderPage(currentPage, currentScale);
+				}
+			});
+		</script>
+	</body>
 </html>

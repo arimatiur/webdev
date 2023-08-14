@@ -10,6 +10,11 @@
 		/>
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/build/pdf.min.js"></script>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/web/pdf_viewer.min.css"
+		/>
 		<style>
 			::-webkit-scrollbar {
 				width: 10px;
@@ -32,6 +37,12 @@
 				justify-content: center;
 				align-items: center;
 				height: 10%;
+			}
+			.even-row {
+				background-color: #efeaea;
+			}
+			.table.table-hover tbody tr:hover {
+				background-color: #cec7e2;
 			}
 		</style>
 	</head>
@@ -72,23 +83,15 @@
 				<div class="col-md-4" id="left-column" style="height: 100%">
 					<h5 style="text-align: center">Cari ID PBG</h5>
 					<div class="input-group mb-3">
-						<form
-							action="/action_page.php"
-							style="width: 100%; display: flex; flex-direction: row"
-						>
-							<input
-								type="text"
-								class="form-control"
-								placeholder="Cari PDF..."
-								id="filterInput"
-							/>
-							<input
-								type="button"
-								class="btn btn-secondary"
-								id="searchButton"
-								value="Cari"
-							/>
-						</form>
+						<input
+							type="text"
+							class="form-control"
+							placeholder="Cari PDF..."
+							id="filterInput"
+						/>
+						<button class="btn btn-secondary" type="button" id="searchButton">
+							Cari
+						</button>
 					</div>
 
 					<!-- Static HTML representation of the PDF table -->
@@ -97,8 +100,8 @@
 							<thead>
 								<tr style="font-size: small">
 									<th scope="col">#</th>
-									<th scope="col">PDF</th>
-									<th scope="col">Simpan</th>
+									<th scope="col">SIMPAN</th>
+									<th scope="col" colspan="3">PDF</th>
 								</tr>
 							</thead>
 							<tbody id="table-body">
@@ -108,31 +111,20 @@
 					</div>
 
 					<div class="center">
-						<form
-							action="/action_page.php"
-							style="width: 100%; display: flex; flex-direction: row; justify-content:center"
+						<button
+							style="margin-right: 20px"
+							class="btn btn-success"
+							id="submit-button"
 						>
-							<input
-								type="text"
-								style="display: none"
-								id="list-input"
-								value=""
-							/>
-							<input
-								style="margin-right: 30px"
-								class="btn btn-success"
-								id="submit-button"
-								type="button"
-								value="Submit"
-							/>
-							<input
-								style="margin-left: 30px"
-								class="btn btn-info"
-								id="clear-button"
-								type="button"
-								value="Clear"
-							/>
-						</form>
+							Submit
+						</button>
+						<button
+							style="margin-left: 20px"
+							class="btn btn-info"
+							id="clear-button"
+						>
+							Clear
+						</button>
 					</div>
 				</div>
 
@@ -141,7 +133,7 @@
 					<div class="bg-info p-0" style="height: 100%">
 						<!-- PDF viewer iframe -->
 						<iframe
-							src=""
+							src="./pdf/SIMBG.pdf"
 							style="align-items: center; width: 100%; height: 100%"
 							id="pdf-viewer"
 						></iframe>
@@ -183,57 +175,121 @@
 							while (tableTBody.firstChild) {
 								tableTBody.removeChild(tableTBody.firstChild);
 							}
-							pdfViewer.setAttribute("src", "");
-							// checkedPDFs = new Set();
+							pdfViewer.setAttribute("src", "./pdf/SIMBG.pdf");
 
 							// Check if the data is not empty
 							if (data && data.length > 0) {
 								data.forEach((item, index) => {
+									const fileName = item.filename;
 									const doc = item.document;
 									const size = item.size;
 									const sudin = item.sudin;
 									const tr = document.createElement("tr");
 									if ((index + 1) % 2 == 0) {
-										tr.style = "background-color: #e5e5e5";
+										tr.classList.add("even-row");
 									}
 
-									const tdIndex = document.createElement("td");
-									tdIndex.style = "font-size: small";
-									tdIndex.textContent = index + 1;
-									tr.appendChild(tdIndex);
+									const trTitle = document.createElement("tr");
 
-									const tdNama = document.createElement("td");
-									const pNama = document.createElement("p");
-									tdNama.style = "font-size: small";
-
-									const docSpan = document.createElement("span");
-									docSpan.innerText = doc;
-
-									pNama.appendChild(docSpan);
-									pNama.appendChild(document.createElement("br"));
-									pNama.appendChild(document.createTextNode(size.toString())); // Convert size to string and create a text node
-									pNama.appendChild(document.createElement("br"));
-									pNama.appendChild(document.createTextNode(sudin)); // Convert sudin to string and create a text node
-
-									tdNama.appendChild(pNama);
-									tdNama.addEventListener("click", () =>
-										loadPDF(text1, doc, text2, sudin)
-									);
-									tr.appendChild(tdNama);
+									const tdNomor = document.createElement("td");
+									tdNomor.rowSpan = 2;
+									tdNomor.innerHTML = "Nomor";
+									tdNomor.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap";
+									trTitle.appendChild(tdNomor);
 
 									const tdCheckBox = document.createElement("td");
-									tdCheckBox.style = "text-align: center";
-									const checkbox = document.createElement("input");
-									checkbox.type = "checkbox";
-									checkbox.style = "width: 15px; height: 15px";
-									checkbox.addEventListener("click", () => {
-										handleCheckboxClick(doc, checkedPDFs);
-										console.log(checkedPDFs);
-									});
-									tdCheckBox.appendChild(checkbox);
-									tr.appendChild(tdCheckBox);
+									tdCheckBox.rowSpan = 2;
+									tdCheckBox.innerHTML = "Checkbox";
+									tdCheckBox.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap";
+									trTitle.appendChild(tdCheckBox);
 
-									tableTBody.appendChild(tr);
+									const tdDokumen = document.createElement("td");
+									tdDokumen.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap";
+									tdDokumen.innerHTML = "Dokumen";
+									trTitle.appendChild(tdDokumen);
+
+									const tdGambar = document.createElement("td");
+									tdGambar.innerHTML = "Dokumen Gambar Perencanaan";
+									tdGambar.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap";
+										tdGambar.colSpan = 2;
+									trTitle.appendChild(tdGambar);
+
+									tableTBody.appendChild(trTitle);
+
+									const trValue = document.createElement("tr");
+
+									const tdDetil = document.createElement("td");
+									tdDetil.innerHTML = "Detil";
+									tdDetil.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap";
+									trValue.appendChild(tdDetil);
+
+									const tdPropName = document.createElement("td");
+									tdPropName.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap";
+									tdPropName.innerHTML = "Item<br>Sudin<br>Size";
+									trValue.appendChild(tdPropName);
+
+									const tdPropValue = document.createElement("td");
+									tdPropValue.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap";
+									tdPropValue.innerHTML = ": iTEM <br>: sUDIN <br>: sIZE";
+									trValue.appendChild(tdPropValue);
+
+									tableTBody.appendChild(trValue);
+
+									// // Coloumnmnmm Index
+									// const tdIndex = document.createElement("td");
+									// tdIndex.style = "font-size: small; vertical-align: middle";
+									// tdIndex.textContent = index + 1;
+									// tr.appendChild(tdIndex);
+
+									// // Coloumnmnmm Checkbox
+									// const tdCheckBox = document.createElement("td");
+									// tdCheckBox.style =
+									// 	"text-align: center; vertical-align: middle";
+									// const checkbox = document.createElement("input");
+									// checkbox.type = "checkbox";
+									// checkbox.style = "width: 20px; height: 20px";
+									// checkbox.addEventListener("click", () => {
+									// 	handleCheckboxClick(doc, checkedPDFs);
+									// });
+									// tdCheckBox.appendChild(checkbox);
+									// tr.appendChild(tdCheckBox);
+
+									// // Column nama document
+									// const tdFileName = document.createElement("td");
+									// tdFileName.style = "font-size: small; vertical-align: middle";
+									// tdFileName.textContent = fileName;
+									// tr.appendChild(tdFileName);
+
+									// // Coloumnmnmm PropName
+									// const nameTxt = "Nama : ";
+									// const sizeTxt = "Size : ";
+									// const sudinTxt = "Sudin : ";
+									// const tdPropName = document.createElement("td");
+									// tdPropName.style = "font-size: small; vertical-align: middle";
+									// tdPropName.style.whiteSpace = "nowrap";
+
+									// tdPropName.innerHTML =
+									// 	nameTxt + "<br>" + sizeTxt + "<br>" + sudinTxt;
+									// tr.appendChild(tdPropName);
+
+									// // Coloumnmnmm PropValue
+									// const tdNama = document.createElement("td");
+									// tdNama.style =
+									// 	"font-size: small; vertical-align: middle; white-space: nowrap";
+									// tdNama.innerHTML = doc + "<br>" + size + "<br>" + sudin;
+									// tdNama.addEventListener("click", () =>
+									// 	loadPDF(text1, doc, text2, sudin)
+									// );
+									// tr.appendChild(tdNama);
+
+									// tableTBody.appendChild(tr);
 								});
 							} else {
 								const trEmpty = document.createElement("tr");
@@ -258,7 +314,6 @@
 				submitButton.addEventListener("click", () => {
 					const sideTable = document.getElementById("sideTable");
 					let link = printCheckedPDFs(checkedPDFs);
-					console.log(document.getElementById("list-input").value);
 					getData(link);
 					link = "";
 					checkedPDFs.clear();
@@ -281,7 +336,7 @@
 					while (tableTBody.firstChild) {
 						tableTBody.removeChild(tableTBody.firstChild);
 					}
-					pdfViewer.setAttribute("src", "");
+					pdfViewer.setAttribute("src", "./pdf/SIMBG.pdf");
 					checkedPDFs.clear();
 				}
 
@@ -290,16 +345,12 @@
 					const text3 =
 						"http://10.1.2.103///apijakartasatu/web/simbg-file/submit?pbgid=pbg-317101-01032023-01&list=[";
 					const text4 = Array.from(checkedPDFs).join(",");
-					console.log(text4);
 					const postLink = text3 + text4 + "]";
-					console.log(checkedPDFs);
-					document.getElementById("list-input").value = text4;
 					return postLink;
 				}
 
 				//Function Get Status from post
 				function getData(link) {
-					console.log(link);
 					fetch(link)
 						.then((res) => {
 							// Check if the response is successful (status 200-299)
@@ -325,7 +376,7 @@
 								console.log(data);
 							} else {
 								// Data is plain text
-								console.log("Non-JSON response:", data);
+								// console.log(data);
 								clearTableBody(checkedPDFs);
 								var tableTBody = document.getElementById("table-body");
 								const trSuccess = document.createElement("tr");
