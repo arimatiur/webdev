@@ -1,7 +1,4 @@
 <script>
-
-			
-
 	let checkedPDFs = new Set();
 	window.onload = function () {
 		const clearButton = document.getElementById("clear-button");
@@ -14,37 +11,27 @@
 		searchButton.addEventListener("click", () => {
 			// const apiList =
 			// 	"http://10.1.2.103///apijakartasatu/web/simbg-file/list?pbgid=";
-			
-			
 			var idPBG = document.getElementById("filterInput").value;
-			// const urlApi = "http://10.1.2.103///apijakartasatu/web-dev/simbg-file/list?pbgid="+idPBG+"&scode="+"161025c00c7941a4a29edd8d3eur1simba69159";
-			
-			
-
-			// console.log(Flask.url_for("simbg_list", {idfilenew : "pbg-317302-15032023-03"}));
-			
-			
-			// console.log(String(/back/simbg-file/list)+idPBG+"&scode="+jakartasatudatadev-89b4052cb0f945fa8db0ec17cexpbg019138e);
-			// const urlApi = { url_for('simbg_file_test1',pbgid = idPBG)};
+			// const urlApi = apiList + idPBG;
 			// const tableTBody = document.getElementById("table-body");
 			// const text1 =
-			// 	"http://10.1.2.103///apijakartasatu/web-dev/simbg-file/file?doc=";
+			// 	"http://10.1.2.103///apijakartasatu/web/simbg-file/file?doc=";
 			// const text2 = "&sudin=";
 
-			checkedPDFs.clear();
+			// checkedPDFs.clear();
 
 			async function api(checkedPDFs) {
 				try {
 					// const response = await fetch(urlApi);
 					// const data = await response.json();
-					
+
 					const data = function () {
 						var tmp = null;
 						$.ajax({
 							'async': false,
 							'type': "POST",
 							'global': false,
-							'dataType': 'html',
+							'dataType': 'json',
 							'url': Flask.url_for("simbg_list", {pbgid : idPBG}),
 							'success': function (data) {
 								tmp = data;
@@ -53,64 +40,128 @@
 						return tmp;
 					}();
 
-					console.log(data);
-					// console.log(Flask.url_for("simbg_list", {pbgid : idPBG}));
-
 					var tableTBody = document.getElementById("table-body");
 					var pdfViewer = document.getElementById("pdf-viewer");
 
 					while (tableTBody.firstChild) {
 						tableTBody.removeChild(tableTBody.firstChild);
 					}
-					pdfViewer.setAttribute("src", "");
-					// checkedPDFs = new Set();
+					pdfViewer.setAttribute("src", "/static/file/simbg/init_pdf.pdf");
 
 					// Check if the data is not empty
 					if (data && data.length > 0) {
 						data.forEach((item, index) => {
+							const fileName = item.filename;
 							const doc = item.document;
 							const size = item.size;
 							const sudin = item.sudin;
-							const tr = document.createElement("tr");
 
-							const tdIndex = document.createElement("td");
-							tdIndex.style = "font-size: small";
-							tdIndex.textContent = index + 1;
-							tr.appendChild(tdIndex);
+							const indexContainer = document.createElement("div");
+							indexContainer.classList.add("index-container");
 
-							const tdNama = document.createElement("td");
-							const pNama = document.createElement("p");
-							tdNama.style = "font-size: small";
+							const trTitle = document.createElement("tr");
+							if ((index + 1) % 2 == 0) {
+								trTitle.classList.add("even-row");
+							}
 
-							const docSpan = document.createElement("span");
-							docSpan.style.backgroundColor = "lightgray";
-							docSpan.innerText = doc;
-
-							pNama.appendChild(docSpan);
-							pNama.appendChild(document.createElement("br"));
-							pNama.appendChild(document.createTextNode(size.toString())); // Convert size to string and create a text node
-							pNama.appendChild(document.createElement("br"));
-							pNama.appendChild(document.createTextNode(sudin)); // Convert sudin to string and create a text node
-
-							tdNama.appendChild(pNama);
-							tdNama.addEventListener("click", () =>
-								loadPDF(text1, doc, text2, sudin)
-							);
-							tr.appendChild(tdNama);
+							const tdNomor = document.createElement("td");
+							tdNomor.rowSpan = 2;
+							tdNomor.innerHTML = index + 1;
+							tdNomor.style =
+								"font-size: small; vertical-align: middle; white-space: nowrap";
+							trTitle.appendChild(tdNomor);
 
 							const tdCheckBox = document.createElement("td");
-							tdCheckBox.style = "text-align: center";
+							tdCheckBox.rowSpan = 2;
+							tdCheckBox.style =
+								"font-size: small; vertical-align: middle; white-space: nowrap";
 							const checkbox = document.createElement("input");
 							checkbox.type = "checkbox";
-							checkbox.style = "width: 15px; height: 15px";
+							checkbox.style = "width: 20px; height: 20px";
 							checkbox.addEventListener("click", () => {
 								handleCheckboxClick(doc, checkedPDFs);
-								console.log(checkedPDFs);
-							});
-							tdCheckBox.appendChild(checkbox);
-							tr.appendChild(tdCheckBox);
+								const submitButton = document.getElementById("submit-button");
+		
+								submitButton.onclick = function() {
+									
+									var idPBG2 = document.getElementById("filterInput").value;
+									const text4 = Array.from(checkedPDFs).join(",");
+									
+									const postLink = function () {
+												var tmp = null;
+												$.ajax({
+													'async': false,
+													'type': "POST",
+													'global': false,
+													'dataType': 'text',
+													'url': Flask.url_for("simbg_submit", {pbgid : idPBG2, list : "["+text4+"]"}),
+													'success': function (data) {
+														tmp = data;
+																												
+													}
+												});
+												return tmp;
+												
+											}();
+																				
+									link = "";
 
-							tableTBody.appendChild(tr);
+									checkedPDFs.clear();
+									
+									clearTableBody(checkedPDFs);
+									alert(idPBG2+" success! "+postLink);
+									
+								};
+
+							});
+
+							tdCheckBox.appendChild(checkbox);
+							trTitle.appendChild(tdCheckBox);
+
+							const tdDokumen = document.createElement("td");
+							tdDokumen.style =
+								"font-size: small; vertical-align: middle; white-space: nowrap";
+							tdDokumen.innerHTML = "Dokumen";
+							trTitle.appendChild(tdDokumen);
+
+							const tdGambar = document.createElement("td");
+							tdGambar.innerHTML = fileName;
+							tdGambar.style =
+								"font-size: small; vertical-align: middle; white-space: nowrap";
+							tdGambar.colSpan = 2;
+							trTitle.appendChild(tdGambar);
+
+							indexContainer.appendChild(trTitle);
+
+							const trValue = document.createElement("tr");
+							if ((index + 1) % 2 == 0) {
+								trValue.classList.add("even-row");
+							}
+
+							const tdDetil = document.createElement("td");
+							tdDetil.innerHTML = "Detil";
+							tdDetil.style =
+								"font-size: small; vertical-align: middle; white-space: nowrap";
+							trValue.appendChild(tdDetil);
+
+							const tdPropName = document.createElement("td");
+							tdPropName.style =
+								"font-size: small; vertical-align: middle; white-space: nowrap; width: 55px";
+							tdPropName.innerHTML = "Item<br>Sudin<br>Size";
+							trValue.appendChild(tdPropName);
+
+							const tdPropValue = document.createElement("td");
+							tdPropValue.style =
+								"font-size: small; vertical-align: middle; white-space: nowrap";
+							tdPropValue.innerHTML =
+								": " + doc + " <br>: " + sudin + " <br>: " + size;
+							tdPropValue.addEventListener("click", () =>
+								loadPDF(doc, sudin)
+							);
+							trValue.appendChild(tdPropValue);
+
+							indexContainer.appendChild(trValue);
+							tableTBody.appendChild(indexContainer);
 						});
 					} else {
 						const trEmpty = document.createElement("tr");
@@ -120,63 +171,29 @@
 						tdEmpty.textContent = "Data Not Found";
 						trEmpty.appendChild(tdEmpty);
 						tableTBody.appendChild(trEmpty);
-						// console.log(urlApi);
+						console.log("API response is empty or invalid");
 						console.log("failed");
-						// const test1 = $.getJSON(Flask.url_for("simbg_file_test2")),
-						// 						function(data) {
-						// 							console.log(test1)
-						// 						});
-						// const test11 = $.getJSON(Flask.url_for("simbg_file_test2"));
-						// const test11 = $.get(Flask.url_for("simbg_file_test2"));
-						// const test1 = href=/apijakartasatu/simbg_file_test2;
-						// const test1 = $.getJSON((/apijakartasatu/simbg_file_test2))
-						$.ajax({
-								type: "GET",
-								url: Flask.url_for("simbg_file_test2", {datatest : "from ajax"}),
-								contentType: "text/plain",
-								dataType: "text",
-								success: function (data) {
-									console.log(data);
-									test2(data);						
-								}
-								});
-
-						function test2(test2) {
-								console.log(test2);
-
-						}
-						
-
-						// console.log(test11);
-						// console.log("API response is empty or invalid");
-						// console.log("failed");
-
 					}
 				} catch (error) {
 					console.error("An error occurred during the fetch:", error);
-					// console.log("failed");
+					console.log("failed");
 				}
 			}
 			api(checkedPDFs);
 		});
 
-		const submitButton = document.getElementById("submit-button");
-		submitButton.addEventListener("click", () => {
-			const sideTable = document.getElementById("sideTable");
-			let link = printCheckedPDFs(checkedPDFs);
-			console.log(document.getElementById("list-input").value);
-			getData(link);
-			link = "";
-			checkedPDFs.clear();
-		});
+		// const submitButton = document.getElementById("submit-button");
+		// submitButton.addEventListener("click", () => {
+		// 	const sideTable = document.getElementById("sideTable");
+		// 	let link = printCheckedPDFs(checkedPDFs);
+		// 	getData(link);
+		// 	link = "";
+		// 	checkedPDFs.clear();
+		// });
 
 		// Function to handle checkbox click
 		function handleCheckboxClick(doc, checkedPDFs) {
-			if (checkedPDFs.has(doc)) {
-				checkedPDFs.delete(doc);
-			} else {
-				checkedPDFs.add(doc);
-			}
+			checkedPDFs.add(doc);
 		}
 
 		// Function to clear the content of the tbody and the iframe
@@ -187,25 +204,21 @@
 			while (tableTBody.firstChild) {
 				tableTBody.removeChild(tableTBody.firstChild);
 			}
-			pdfViewer.setAttribute("src", "");
+			pdfViewer.setAttribute("src", "/static/file/simbg/init_pdf.pdf");
 			checkedPDFs.clear();
 		}
 
 		//Function Submit Button
-		function printCheckedPDFs(checkedPDFs) {
-			const text3 =
-				"http://10.1.2.103///apijakartasatu/web-dev/simbg-file/submit?pbgid=pbg-317101-01032023-01&list=[";
-			const text4 = Array.from(checkedPDFs).join(",");
-			console.log(text4);
-			const postLink = text3 + text4 + "]";
-			console.log(checkedPDFs);
-			document.getElementById("list-input").value = text4;
-			return postLink;
-		}
+		// function printCheckedPDFs(checkedPDFs) {
+		// 	const text3 =
+		// 		"http://10.1.2.103///apijakartasatu/web/simbg-file/submit?pbgid=pbg-317101-01032023-01&list=[";
+		// 	const text4 = Array.from(checkedPDFs).join(",");
+		// 	const postLink = text3 + text4 + "]";
+		// 	return postLink;
+		// }
 
 		//Function Get Status from post
 		function getData(link) {
-			console.log(link);
 			fetch(link)
 				.then((res) => {
 					// Check if the response is successful (status 200-299)
@@ -231,7 +244,7 @@
 						console.log(data);
 					} else {
 						// Data is plain text
-						console.log("Non-JSON response:", data);
+						// console.log(data);
 						clearTableBody(checkedPDFs);
 						var tableTBody = document.getElementById("table-body");
 						const trSuccess = document.createElement("tr");
@@ -249,37 +262,31 @@
 		}
 
 		// Function Load PDF using AJAX
-		function loadPDF(text1, doc, text2, sudin) {
-			const url = text1 + doc + text2 + sudin;
+		// 
+		
+		function loadPDF(doc, sudin) {
+			
+			var xhr = new XMLHttpRequest();
+			xhr.open("GET", Flask.url_for("simbg_file", {doc : doc, sudin : sudin}), true);
+			xhr.responseType = "blob";
 
-			// Create a new XMLHttpRequest object
-			const xhr = new XMLHttpRequest();
-
-			// Configure the XMLHttpRequest
-			xhr.open("GET", url, true);
-			xhr.responseType = "blob"; // Set the response type to 'blob' to handle binary data
-
-			// Set up the event handler when the request is completed
-			xhr.onload = function () {
-				if (xhr.status === 200) {
-					// Convert the response to a blob
-					const blob = xhr.response;
-
-					// Convert the blob to a URL
-					const blobURL = URL.createObjectURL(blob);
-
-					// Set the 'src' attribute of the iframe to the blob URL
-					const pdfViewer = document.getElementById("pdf-viewer");
-					pdfViewer.setAttribute("src", blobURL);
-				}
+			xhr.onload = function (event) {
+				var blob = xhr.response;
+				blobURL=window.URL.createObjectURL(blob);
+				const pdfViewer = document.getElementById("pdf-viewer");
+				pdfViewer.setAttribute("src", blobURL);
 			};
-
-			// Send the request
 			xhr.send();
+
 		}
+
 	};
 
 	function zoom() {
 		document.body.style.zoom = "80%";
-	}
+	};
+
+	document.getElementById("btn_sgnout").onclick = function () {
+		location.href = "/apijakartasatu/web/simbg-file/out";
+	};
 </script>
