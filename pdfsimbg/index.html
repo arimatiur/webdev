@@ -201,45 +201,45 @@
 									const checkbox = document.createElement("input");
 									checkbox.type = "checkbox";
 									checkbox.style = "width: 20px; height: 20px";
-									checkbox.addEventListener("click", () => {
-										handleCheckboxClick(doc, checkedPDFs);
-										const submitButton =
-											document.getElementById("submit-button");
-
-										submitButton.onclick = function () {
-											var idPBG2 = document.getElementById("filterInput").value;
-											const text4 = Array.from(checkedPDFs).join(",");
-
-											const postLink = (function () {
-												var tmp = null;
-												$.ajax({
-													async: false,
-													type: "POST",
-													global: false,
-													dataType: "text",
-													url: Flask.url_for("simbg_submit", {
-														pbgid: idPBG2,
-														list: "[" + text4 + "]",
-													}),
-													success: function (data) {
-														tmp = data;
-													},
-												});
-												return tmp;
-											})();
-
-											link = "";
-
-											checkedPDFs.clear();
-
-											clearTableBody(checkedPDFs);
-											alert(idPBG2 + " success! " + postLink);
-										};
-									});
-
 									// checkbox.addEventListener("click", () => {
 									// 	handleCheckboxClick(doc, checkedPDFs);
+									// 	const submitButton =
+									// 		document.getElementById("submit-button");
+
+									// 	submitButton.onclick = function () {
+									// 		var idPBG2 = document.getElementById("filterInput").value;
+									// 		const text4 = Array.from(checkedPDFs).join(",");
+
+									// 		const postLink = (function () {
+									// 			var tmp = null;
+									// 			$.ajax({
+									// 				async: false,
+									// 				type: "POST",
+									// 				global: false,
+									// 				dataType: "text",
+									// 				url: Flask.url_for("simbg_submit", {
+									// 					pbgid: idPBG2,
+									// 					list: "[" + text4 + "]",
+									// 				}),
+									// 				success: function (data) {
+									// 					tmp = data;
+									// 				},
+									// 			});
+									// 			return tmp;
+									// 		})();
+
+									// 		link = "";
+
+									// 		checkedPDFs.clear();
+
+									// 		clearTableBody(checkedPDFs);
+									// 		alert(idPBG2 + " success! " + postLink);
+									// 	};
 									// });
+
+									checkbox.addEventListener("click", () => {
+										handleCheckboxClick(doc, checkedPDFs);
+									});
 									tdCheckBox.appendChild(checkbox);
 									trTitle.appendChild(tdCheckBox);
 
@@ -247,18 +247,18 @@
 									tdDokumen.style =
 										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
 									tdDokumen.innerHTML = "Dokumen";
-									tdDokumen.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
+									// tdDokumen.addEventListener("click", () =>
+									// 	loadPDF(doc, sudin)
+									// );
 									trTitle.appendChild(tdDokumen);
 
 									const tdGambar = document.createElement("td");
 									tdGambar.style =
 										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
 									tdGambar.innerHTML = fileName;
-									tdGambar.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
+									// tdGambar.addEventListener("click", () =>
+									// 	loadPDF(doc, sudin)
+									// );
 									tdGambar.colSpan = 2;
 									trTitle.appendChild(tdGambar);
 
@@ -273,18 +273,18 @@
 									tdDetil.style =
 										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
 									tdDetil.innerHTML = "Detil";
-									tdDetil.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
+									// tdDetil.addEventListener("click", () =>
+									// 	loadPDF(doc, sudin)
+									// );
 									trValue.appendChild(tdDetil);
 
 									const tdPropName = document.createElement("td");
 									tdPropName.style =
 										"font-size: small; vertical-align: middle; white-space: nowrap; width: 55px; cursor: pointer";
 									tdPropName.innerHTML = "Item<br>Sudin<br>Size";
-									tdPropName.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
+									// tdPropName.addEventListener("click", () =>
+									// 	loadPDF(doc, sudin)
+									// );
 									trValue.appendChild(tdPropName);
 
 									const tdPropValue = document.createElement("td");
@@ -292,12 +292,12 @@
 										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
 									tdPropValue.innerHTML =
 										": " + doc + " <br>: " + sudin + " <br>: " + size;
-									tdPropValue.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
 									// tdPropValue.addEventListener("click", () =>
-									// 	loadPDF(text1, doc, text2, sudin)
+									// 	loadPDF(doc, sudin)
 									// );
+									tdPropValue.addEventListener("click", () =>
+										loadPDF(text1, doc, text2, sudin)
+									);
 									trValue.appendChild(tdPropValue);
 
 									tableTBody.appendChild(trValue);
@@ -414,6 +414,7 @@
 					// Configure the XMLHttpRequest
 					xhr.open("GET", url, true);
 					xhr.responseType = "blob"; // Set the response type to 'blob' to handle binary data
+					console.log(xhr);
 
 					// Set up the event handler when the request is completed
 					xhr.onload = function () {
@@ -426,7 +427,7 @@
 
 							// Set the 'src' attribute of the iframe to the blob URL
 							const pdfViewer = document.getElementById("pdf-viewer");
-							pdfViewer.setAttribute("src", blobURL);
+							pdfViewer.setAttribute("src", blobURL)
 						}
 					};
 
