@@ -1,40 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Leaflet WebMap</title>
-		<link
-			rel="stylesheet"
-			href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-			integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-			crossorigin=""
-		/>
-		<script
-			src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-			integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-			crossorigin=""
-		></script>
-		<style>
-			html,
-			body,
-			#map {
-				height: 700px;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="map"></div>
-		<script>
-			const map = L.map("map").setView([51.505, -0.09], 13);
-            var marker = L.marker([51.5, -0.09]).addTo(map);
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaflet WebMap</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <style>
+      html,
+      body,
+      #map {
+        height: 700px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      fetch("./data.geojson")
+        .then((response) => response.json())
+        .then((dataset) => {
+          const map = L.map("map").setView(
+            [-6.175490901979208, 106.82709320110249],
+            13
+          );
 
-			L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+          var basemap = L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            {
+              attribution:
+                '&copy; <a href="http://www.example.com/">Example</a>',
+              maxNativeZoom: 19,
+              maxZoom: 22,
+            }
+          ).addTo(map);
+          var GeoJSONLayer = dataset.features;
 
-			
-			marker
-				.bindPopup("<b>Hello, World!</b><br>This is a Leaflet web map.")
-				.openPopup();
-		</script>
-	</body>
+          L.geoJSON(GeoJSONLayer, {
+            style: function (feature) {
+              switch (feature.properties.FUNGSI_JALAN) {
+                case 1:
+                  return {
+                    color: "#f5f0f0",
+                    weight: 4,
+
+                    fillColor: "#ff0000",
+                    fillOpacity: 1,
+                  };
+                case 2:
+                  return { color: "#0000ff" };
+              }
+            },
+          }).addTo(map);
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+        });
+    </script>
+  </body>
 </html>
