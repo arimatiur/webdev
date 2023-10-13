@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaflet Map with Turf.js and Chart.js</title>
+    <!-- Include Leaflet CSS and JavaScript -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- Include Turf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/6.3.0/turf.min.js"></script>
+
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <div id="map" style="height: 400px"></div>
+    <canvas id="pieChart" width="400" height="200"></canvas>
+
+    <script>
+      // Create a Leaflet map
+      var map = L.map("map").setView([0, 0], 2);
+
+      // Add a base map (e.g., OpenStreetMap)
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+      }).addTo(map);
+
+      // Define a rectangle layer
+      var rectangle = L.rectangle([
+        [30, -30], // Southwest corner
+        [60, 60], // Northeast corner
+      ]).addTo(map);
+
+      // Define a GeoJSON point layer
+      var points = {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [10, 10], // Inside the rectangle
+            },
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [40, 40], // Inside the rectangle
+            },
+          },
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [-10, -10], // Outside the rectangle
+            },
+          },
+        ],
+      };
+
+      // Add the point layer to the map
+      L.geoJSON(points).addTo(map);
+
+      // Use Turf.js to categorize points as inside or outside the rectangle
+      var insidePoints = 0;
+      var outsidePoints = 0;
+
+      points.features.forEach(function (point) {
+        var isInside = turf.booleanPointInPolygon(point, rectangle.toGeoJSON());
+        if (isInside) {
+          insidePoints++;
+        } else {
+          outsidePoints++;
+        }
+      });
+
+      // Calculate percentages
+      var totalPoints = points.features.length;
+      var insidePercentage = (insidePoints / totalPoints) * 100;
+      var outsidePercentage = (outsidePoints / totalPoints) * 100;
+
+      // Create a Chart.js pie chart
+      var pieChartCanvas = document.getElementById("pieChart").getContext("2d");
+      var pieChart = new Chart(pieChartCanvas, {
+        type: "pie",
+        data: {
+          labels: ["Inside Rectangle", "Outside Rectangle"],
+          datasets: [
+            {
+              data: [insidePercentage, outsidePercentage],
+              backgroundColor: ["green", "red"],
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+        },
+      });
+    </script>
+  </body>
+</html>

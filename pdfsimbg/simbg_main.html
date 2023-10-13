@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung</title>
+		<link
+			rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		/>
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/build/pdf.min.js"></script>
+		
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/web/pdf_viewer.min.css"
+		/>
+		<style>
+			::-webkit-scrollbar {
+				width: 10px;
+			}
+
+			::-webkit-scrollbar-track {
+				background: #f1f1f1;
+			}
+
+			::-webkit-scrollbar-thumb {
+				background: #888;
+			}
+
+			::-webkit-scrollbar-thumb:hover {
+				background: #555;
+			}
+
+			.center {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 10%;
+			}
+			.even-row {
+				background-color: #efeaea;
+			}
+			.index-container:hover {
+				background-color: #cec7e2;
+			}
+		</style>
+	</head>
+
+	<body onload="zoom()">
+		<div class="container-fluid">
+			<!-- Header -->
+			<div class="row bg-dark text-white py-3" style="display: flex">
+				<div
+					class="col"
+					style="display: flex; flex-direction: row; align-items: center"
+				>
+					<div class="col-md-0">
+						<img
+							src="/apigis/id/ab29c285f476474a8a4d84a7088c6376"
+							style="width: 75.6px; height: 81.2px"
+						/>
+					</div>
+					<div
+						style="text-align: left; display: flex; flex-direction: column"
+						class="col-md-10"
+					>
+						<h4>
+							Dokumen Permohonan Sistem Informasi Manajemen Bangunan Gedung
+						</h4>
+						<h4>Dinas Cipta Karya Tata Ruang Pertanahan</h4>
+					</div>
+					<div style="text-align: right" class="col-md-1">
+						<button type="button" class="btn btn-primary btn-sm" id="btn_sgnout">
+							Sign Out
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="row mt-3" style="height: 83vh">
+				<div class="col-md-4" id="left-column" style="height: 100%">
+					<h5 style="text-align: center">Cari Dokumen</h5>
+					<div class="input-group mb-3">
+						<input
+							type="text"
+							class="form-control"
+							placeholder="Masukan ID Data"
+							id="filterInput"
+						/>
+						<button class="btn btn-secondary" type="button" id="searchButton">
+							Cari
+						</button>
+					</div>
+					<div class="bg-light p-0" style="height: 75%; overflow-y: scroll">
+						<table class="table" id="sideTable">
+							<thead>
+								<tr style="font-size: small">
+									<th scope="col">#</th>
+									<th scope="col">SIMPAN</th>
+									<th scope="col" colspan="3">PDF</th>
+								</tr>
+							</thead>
+							<tbody id="table-body">
+							</tbody>
+						</table>
+					</div>
+
+					<div class="center">
+						<button
+							style="margin-right: 20px"
+							class="btn btn-success"
+							id="submit-button"
+						>
+							Submit
+						</button>
+						<button
+							style="margin-left: 20px"
+							class="btn btn-info"
+							id="clear-button"
+						>
+							Clear
+						</button>
+					</div>
+				</div>
+
+				<div class="col-md-8" id="right-column">
+					<div class="bg-info p-0" style="height: 100%">
+						<iframe
+							src="/apigis/id/96a67324aaa24eada9def8bbddb19da7"
+							style="align-items: center; width: 100%; height: 100%"
+							id="pdf-viewer"
+						></iframe>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			let checkedPDFs = new Set();
+			window.onload = function () {
+				const clearButton = document.getElementById("clear-button");
+				clearButton.addEventListener("click", () => {
+					clearAll("Please Input ID Data");
+					document.getElementById("filterInput").value="";
+				});
+
+				const searchButton = document.getElementById("searchButton");
+				searchButton.addEventListener("click", () => {
+
+					var idPBG = document.getElementById("filterInput").value;
+					async function api(checkedPDFs) {
+						try {
+							const data = function () {
+								var tmp = null;
+								$.ajax({
+									'async': false,
+									'type': "POST",
+									'global': false,
+									'dataType': 'json',
+									'url' : "{{ url_for( 'simbg_list', ur1=ur.ur1) }}"+"?usern="+'{{ur.usern}}'+"&pbgid="+idPBG,
+									'success': function (data) {
+										tmp = data;
+									}
+								});
+								return tmp;
+							}();
+
+							var tableTBody = document.getElementById("table-body");
+							var pdfViewer = document.getElementById("pdf-viewer");
+
+							while (tableTBody.firstChild) {
+								tableTBody.removeChild(tableTBody.firstChild);
+							}
+							pdfViewer.setAttribute("src", "/apigis/id/96a67324aaa24eada9def8bbddb19da7");
+
+							if (data && data.length > 0) {
+								data.forEach((item, index) => {
+									const fileName = item.filename;
+									const doc = item.document;
+									const size = item.size;
+									const sudin = item.sudin;
+
+									const trTitle = document.createElement("tr");
+									if ((index + 1) % 2 == 0) {
+										trTitle.classList.add("even-row");
+									}
+
+									const tdNomor = document.createElement("td");
+									tdNomor.rowSpan = 2;
+									tdNomor.innerHTML = index + 1;
+									tdNomor.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap";
+									trTitle.appendChild(tdNomor);
+
+									const tdCheckBox = document.createElement("td");
+									tdCheckBox.rowSpan = 2;
+									tdCheckBox.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap";
+									const checkbox = document.createElement("input");
+									checkbox.type = "checkbox";
+									checkbox.style = "width: 20px; height: 20px";
+									checkbox.addEventListener("click", () => {
+										handleCheckboxClick(doc, checkedPDFs);
+										const submitButton =
+											document.getElementById("submit-button");
+
+										submitButton.onclick = function () {
+											var idPBG2 = document.getElementById("filterInput").value;
+											const text4 = Array.from(checkedPDFs).join(",");
+
+											const postLink = (function () {
+												var tmp = null;
+												$.ajax({
+													async: false,
+													type: "POST",
+													global: false,
+													dataType: "text",
+													'url' : "{{ url_for( 'simbg_submit', ur3=ur.ur3) }}"+"?usern="+'{{ur.usern}}'+"&pbgid="+idPBG2+"&list=["+text4+"]",
+													success: function (data) {
+														tmp = data;
+														
+														if (data == "success")
+															{	clearAll("Data Sent!");
+																document.getElementById("filterInput").value="";
+																alert("user : "+ "{{ur.usern}}" + ", ID_PBG : "+ idPBG2 + ", " +data+ " !");
+															}
+														else if (data == "not-success")
+															{alert("user : "+ "{{ur.usern}}" + ", ID_PBG : "+ idPBG2 + ", " +data+ " !");}												
+														else
+															{alert("session expired, please log in again!");}
+
+													},
+												});
+												return tmp;
+											})();
+
+											link = "";
+
+											checkedPDFs.clear();
+
+
+										};
+									});
+
+									tdCheckBox.appendChild(checkbox);
+									trTitle.appendChild(tdCheckBox);
+
+									const tdDokumen = document.createElement("td");
+									tdDokumen.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
+									tdDokumen.innerHTML = "Dokumen";
+									tdDokumen.addEventListener("click", () =>
+										loadPDF(doc, sudin)
+									);
+									trTitle.appendChild(tdDokumen);
+
+									const tdGambar = document.createElement("td");
+									tdGambar.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
+									tdGambar.innerHTML = fileName;
+									tdGambar.addEventListener("click", () =>
+										loadPDF(doc, sudin)
+									);
+									tdGambar.colSpan = 2;
+									trTitle.appendChild(tdGambar);
+
+									tableTBody.appendChild(trTitle);
+
+									const trValue = document.createElement("tr");
+									if ((index + 1) % 2 == 0) {
+										trValue.classList.add("even-row");
+									}
+
+									const tdDetil = document.createElement("td");
+									tdDetil.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
+									tdDetil.innerHTML = "Detil";
+									tdDetil.addEventListener("click", () =>
+										loadPDF(doc, sudin)
+									);
+									trValue.appendChild(tdDetil);
+
+									const tdPropName = document.createElement("td");
+									tdPropName.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap; width: 55px; cursor: pointer";
+									tdPropName.innerHTML = "Item<br>Sudin<br>Size";
+									tdPropName.addEventListener("click", () =>
+										loadPDF(doc, sudin)
+									);
+									trValue.appendChild(tdPropName);
+
+									const tdPropValue = document.createElement("td");
+									tdPropValue.style =
+										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
+									tdPropValue.innerHTML =
+										": " + doc + " <br>: " + sudin + " <br>: " + size;
+									tdPropValue.addEventListener("click", () =>
+										loadPDF(doc, sudin)
+									);
+									trValue.appendChild(tdPropValue);
+
+									tableTBody.appendChild(trValue);
+								});
+							} else {
+								clearAll("Data Not Found");
+							}
+						} catch (error) {
+							console.error("An error occurred during the fetch:", error);
+							
+						}
+					}
+					api(checkedPDFs);
+				});
+
+				function handleCheckboxClick(doc, checkedPDFs) {
+					checkedPDFs.add(doc);
+				}
+
+				function clearAll(status){
+					// clearTableBody(checkedPDFs);
+					var tableTBody = document.getElementById("table-body");
+					var pdfViewer = document.getElementById("pdf-viewer");
+					pdfViewer.setAttribute("src", "/apigis/id/96a67324aaa24eada9def8bbddb19da7");
+					while (tableTBody.firstChild) {
+						tableTBody.removeChild(tableTBody.firstChild);
+					}
+					const trSuccess = document.createElement("tr");
+					const tdSuccess = document.createElement("td");
+					tdSuccess.style = "text-align: center; font-size: small";
+					tdSuccess.colSpan = 3;
+					tdSuccess.textContent = status;
+					trSuccess.appendChild(tdSuccess);
+					tableTBody.appendChild(trSuccess);	
+					checkedPDFs.clear();
+				}
+
+				function loadPDF(doc, sudin) {
+					var xhr = new XMLHttpRequest();
+					xhr.open("GET", "{{ url_for( 'simbg_file', ur2=ur.ur2) }}"+"?doc="+doc+"&sudin="+sudin, true);
+					xhr.responseType = "blob";
+					
+					xhr.onload = function (event) {
+						var blob = xhr.response;
+						blobURL=window.URL.createObjectURL(blob);
+						const pdfViewer = document.getElementById("pdf-viewer");
+						pdfViewer.setAttribute("src", blobURL)
+
+						if (xhr.readyState === XMLHttpRequest.DONE){
+							if (xhr.response.type === 'application/pdf'){}
+							else {
+								clearAll("session expired, please log in again!");
+								document.getElementById("filterInput").value="";		
+								alert("session expired, please log in again!");
+							}
+						}
+					}
+						
+					xhr.send();
+					if (xhr.readyState === XMLHttpRequest.DONE){
+					if (xhr.response.type === 'text/html'){
+						const pdfViewer	= document.getElementById("pdf-viewer");
+						pdfViewer.setAttribute("src", "/apigis/id/96a67324aaa24eada9def8bbddb19da7");
+						}
+					}
+
+				};
+				
+			};
+
+			function zoom() {
+				document.body.style.zoom = "80%";
+			};
+
+			document.getElementById("btn_sgnout").onclick = function () {
+				location.href = "{{ url_for( 'simbg_out', usern=ur.usern) }}";
+				
+				
+			};
+		</script>
+	</body>
+</html>
