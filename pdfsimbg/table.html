@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+	<body>
+		<style type="text/css">
+			.tg {
+				border-collapse: collapse;
+				border-spacing: 0;
+                word-wrap: break-word;
+			}
+			.tg td {
+				border-color: black;
+				border-style: solid;
+				border-width: 1px;
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+				overflow: hidden;
+				padding: 10px 5px;
+			}
+			.tg th {
+				border-color: black;
+				border-style: solid;
+				border-width: 1px;
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+				font-weight: normal;
+				overflow: hidden;
+				padding: 10px 5px;
+			}
+			.tg .tg-baqh {
+				text-align: center;
+				vertical-align: top;
+			}
+			.tg .tg-c3ow {
+				border-color: inherit;
+				text-align: center;
+				vertical-align: middle;
+			}
+			.tg .tg-0pky {
+				border-color: inherit;
+				text-align: left;
+				vertical-align: top;
+			}
+			.tg .tg-0lax {
+				text-align: left;
+				vertical-align: top;
+			}
+            .tr-odd {
+                background-color: lightblue;
+            }
+            .tr-even {
+                background-color:aqua;
+            }
+            .th {
+                background-color: deepskyblue;
+            }
+		</style>
+		<table class="tg" style="table-layout: fixed; width: 510px">
+            <!-- Table Head -->
+			<colgroup>
+				<col style="width: 50px" />
+				<col style="width: 140px" />
+				<col style="width: 90px" />
+				<col style="width: 60px" />
+				<col style="width: 170px" />
+			</colgroup>
+			<thead class="th">
+				<tr>
+					<th class="tg-c3ow">#</th>
+					<th class="tg-c3ow">SIMPAN</th>
+					<th class="tg-c3ow" colspan="3">PDF</th>
+				</tr>
+			</thead>
+            <!-- Table Body -->
+			<tbody>
+                <!-- Fisrt Row -->
+				<tr class="tr-odd">
+					<td class="tg-c3ow" rowspan="4">1</td>
+					<td class="tg-c3ow" rowspan="2">
+                        <input type="checkbox" style="width: 20px; height: 20px;">
+                        <br />
+                        judul 1
+                    </td>
+					<td class="tg-0pky" rowspan="2">Dokumen</td>
+					<td class="tg-0pky" colspan="2" rowspan="2">
+						Dokumen Gambar Perencanaan this is very long text taht need to be wraped
+					</td>
+				</tr>
+				<tr class="tr-odd"></tr>
+				<tr class="tr-odd">
+					<td class="tg-baqh" rowspan="2"><input type="checkbox" style="width: 20px; height: 20px;"><br />judul 2</td>
+					<td class="tg-0lax" rowspan="2">Detil</td>
+					<td class="tg-0lax">Item</td>
+					<td class="tg-0lax">: iTEM</td>
+				</tr>
+				<tr class="tr-odd">
+					<td class="tg-0lax">Size</td>
+					<td class="tg-0lax">: sIZE</td>
+				</tr>
+                <!-- Second Row -->
+                <tr class="tr-even">
+					<td class="tg-c3ow" rowspan="4">2</td>
+					<td class="tg-c3ow" rowspan="2"><input type="checkbox" style="width: 20px; height: 20px;"><br />judul 1</td>
+					<td class="tg-0pky" rowspan="2">Dokumen</td>
+					<td class="tg-0pky" colspan="2" rowspan="2">
+						Dokumen Gambar Perencanaan this is very long text taht need to be wraped
+					</td>
+				</tr>
+				<tr class="tr-even"></tr>
+				<tr class="tr-even">
+					<td class="tg-baqh" rowspan="2"><input type="checkbox" style="width: 20px; height: 20px;"><br />judul 2</td>
+					<td class="tg-0lax" rowspan="2">Detil</td>
+					<td class="tg-0lax">Item</td>
+					<td class="tg-0lax">: iTEM</td>
+				</tr>
+				<tr class="tr-even">
+					<td class="tg-0lax">Size</td>
+					<td class="tg-0lax">: sIZE</td>
+				</tr>
+			</tbody>
+		</table>
+	</body>
+</html>

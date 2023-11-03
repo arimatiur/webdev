@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style type="text/css">
+			.tg {
+				border-collapse: collapse;
+				border-spacing: 0;
+				word-wrap: break-word;
+			}
+			.tg td {
+				border-color: black;
+				border-style: solid;
+				border-width: 1px;
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+				overflow: hidden;
+				padding: 10px 5px;
+			}
+			.tg th {
+				border-color: black;
+				border-style: solid;
+				border-width: 1px;
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+				font-weight: normal;
+				overflow: hidden;
+				padding: 10px 5px;
+			}
+			.tg .tg-baqh {
+                border-color: inherit;
+				text-align: center;
+				vertical-align: top;
+			}
+			.tg .tg-c3ow {
+				border-color: inherit;
+				text-align: center;
+				vertical-align: middle;
+			}
+			.tg .tg-0pky {
+				border-color: inherit;
+				text-align: left;
+				vertical-align: top;
+			}
+			.tg .tg-0lax {
+                border-color: inherit;
+				text-align: left;
+				vertical-align: top;
+			}
+			.tr-odd {
+				background-color: lightblue;
+			}
+			.tr-even {
+				background-color: aqua;
+			}
+			.th {
+				background-color: deepskyblue;
+			}
+            .cb {
+                width: 20px;
+                height: 20px;
+            }
+		</style>
+	</head>
+	<body>
+		<table class="tg" style="table-layout: fixed; width: 510px">
+			<!-- Table Head -->
+			<colgroup>
+				<col style="width: 50px" />
+				<col style="width: 140px" />
+				<col style="width: 90px" />
+				<col style="width: 60px" />
+				<col style="width: 170px" />
+			</colgroup>
+			<thead class="th">
+				<tr>
+					<th class="tg-c3ow">#</th>
+					<th class="tg-c3ow">SIMPAN</th>
+					<th class="tg-c3ow" colspan="3">PDF</th>
+				</tr>
+			</thead>
+			<!-- Table Body -->
+			<tbody id="tableBody"></tbody>
+		</table>
+		<script>
+			var tableBody = document.getElementById("tableBody");
+
+            //START TABLE BODY CREATION
+			//ROW 1
+			const tr1 = document.createElement("tr");
+			tr1.className = "tr-odd";
+			tableBody.appendChild(tr1);
+
+                const tr1td1 = document.createElement("td");
+                tr1td1.className = "tg-c3ow";
+                tr1td1.rowSpan = 4;
+                tr1td1.innerHTML = "1";
+                tr1.appendChild(tr1td1);
+
+                const tr1td2 = document.createElement("td");
+                tr1td2.className = "tg-c3ow";
+                tr1td2.rowSpan = 2;
+                tr1.appendChild(tr1td2);
+
+                    tr1td2.innerHTML = '<input type="checkbox" id="checkbox1" class="cb"><br />Checkbox 1';
+                    //getElementById("checkbox1")
+               
+                const tr1td3 = document.createElement("td");
+                tr1td3.className = "tg-0pky"
+                tr1td3.rowSpan = 2;
+                tr1td3.innerText = "Dokumen"
+                tr1td3.addEventListener("click", () =>
+                    loadPDF(doc, sudin)
+                );
+                tr1.appendChild(tr1td3);
+
+                const tr1td4 = document.createElement("td");
+                tr1td4.className = "tg-0pky"
+                tr1td4.colSpan = 2;
+                tr1td4.innerText = "Dokumen Gambar Perencanaan (this is very long text taht need to be wraped)"
+                tr1td4.addEventListener("click", () =>
+                    loadPDF(doc, sudin)
+                );
+                tr1.appendChild(tr1td4);
+
+			//ROW 2
+			const tr2 = document.createElement("tr");
+			tr2.className = "tr-odd";
+			tableBody.appendChild(tr2);
+
+			//ROW 3
+			const tr3 = document.createElement("tr");
+			tr3.className = "tr-odd";
+			tableBody.appendChild(tr3);
+
+                const tr3td1 = document.createElement("td");
+                tr3td1.className = "tg-baqh"
+                tr3td1.rowSpan = 2;
+                tr3.appendChild(tr3td1);
+
+                    tr3td1.innerHTML = '<input type="checkbox" id="checkbox2" class="cb"><br />Checkbox 2';
+                    //getElementById("checkbox2")
+
+                const tr3td2 = document.createElement("td");
+                tr3td2.className = "tg-0lax";
+                tr3td2.rowSpan = 2;
+                tr3td2.innerText = "Detil";
+                tr3.appendChild(tr3td2);
+
+                const tr3td3 = document.createElement("td");
+                tr3td3.className = "tg-0lax";
+                tr3td3.innerText = "Item";
+                tr3.appendChild(tr3td3);
+
+                const tr3td4 = document.createElement("td");
+                tr3td4.className = "tg-0lax"
+                tr3td4.innerText = ": iTEM"
+                tr3.appendChild(tr3td4);
+
+			//ROW 4
+			const tr4 = document.createElement("tr");
+			tr4.className = "tr-odd";
+			tableBody.appendChild(tr4);
+
+                const tr4td1 = document.createElement("td");
+                tr4td1.className = "tg-0lax"
+                tr4td1.innerText = "Size"
+                tr4.appendChild(tr4td1);
+
+                const tr4td2 = document.createElement("td");
+                tr4td2.className = "tg-0lax"
+                tr4td2.innerText = ": sIZE"
+                tr4.appendChild(tr4td2);
+            //END TABLE BODY CREATION
+		</script>
+	</body>
+</html>

@@ -11,7 +11,7 @@
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/build/pdf.min.js"></script>
-		
+
 		<link
 			rel="stylesheet"
 			href="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.9.179/web/pdf_viewer.min.css"
@@ -46,6 +46,65 @@
 				background-color: #cec7e2;
 			}
 		</style>
+		<style type="text/css">
+			.tg {
+				border-collapse: collapse;
+				border-spacing: 0;
+				word-wrap: break-word;
+			}
+			.tg td {
+				border-color: black;
+				border-style: solid;
+				border-width: 1px;
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+				overflow: hidden;
+				padding: 10px 5px;
+			}
+			.tg th {
+				border-color: black;
+				border-style: solid;
+				border-width: 1px;
+				font-family: Arial, sans-serif;
+				font-size: 14px;
+				font-weight: normal;
+				overflow: hidden;
+				padding: 10px 5px;
+			}
+			.tg .tg-baqh {
+                border-color: inherit;
+				text-align: center;
+				vertical-align: top;
+			}
+			.tg .tg-c3ow {
+				border-color: inherit;
+				text-align: center;
+				vertical-align: middle;
+			}
+			.tg .tg-0pky {
+				border-color: inherit;
+				text-align: left;
+				vertical-align: top;
+			}
+			.tg .tg-0lax {
+                border-color: inherit;
+				text-align: left;
+				vertical-align: top;
+			}
+			.tr-odd {
+				background-color: lightblue;
+			}
+			.tr-even {
+				background-color: aqua;
+			}
+			.th {
+				background-color: deepskyblue;
+			}
+            .cb {
+                width: 20px;
+                height: 20px;
+            }
+		</style>
 	</head>
 
 	<body onload="zoom()">
@@ -72,7 +131,11 @@
 						<h4>Dinas Cipta Karya Tata Ruang Pertanahan</h4>
 					</div>
 					<div style="text-align: right" class="col-md-1">
-						<button type="button" class="btn btn-primary btn-sm" id="btn_sgnout">
+						<button
+							type="button"
+							class="btn btn-primary btn-sm"
+							id="btn_sgnout"
+						>
 							Sign Out
 						</button>
 					</div>
@@ -94,16 +157,24 @@
 						</button>
 					</div>
 					<div class="bg-light p-0" style="height: 75%; overflow-y: scroll">
-						<table class="table" id="sideTable">
-							<thead>
-								<tr style="font-size: small">
-									<th scope="col">#</th>
-									<th scope="col">SIMPAN</th>
-									<th scope="col" colspan="3">PDF</th>
+						<table class="tg" style="table-layout: fixed; width: 470px">
+							<!-- Table Head -->
+							<colgroup>
+								<col style="width: 50px" />
+								<col style="width: 100px" />
+								<col style="width: 90px" />
+								<col style="width: 60px" />
+								<col style="width: 170px" />
+							</colgroup>
+							<thead class="th">
+								<tr>
+									<th class="tg-c3ow">#</th>
+									<th class="tg-c3ow">SIMPAN</th>
+									<th class="tg-c3ow" colspan="3">PDF</th>
 								</tr>
 							</thead>
-							<tbody id="table-body">
-							</tbody>
+							<!-- Table Body -->
+							<tbody id="tableBody"></tbody>
 						</table>
 					</div>
 
@@ -143,37 +214,39 @@
 				const clearButton = document.getElementById("clear-button");
 				clearButton.addEventListener("click", () => {
 					clearAll("Please Input ID Data");
-					document.getElementById("filterInput").value="";
+					document.getElementById("filterInput").value = "";
 				});
 
 				const searchButton = document.getElementById("searchButton");
 				searchButton.addEventListener("click", () => {
-
 					var idPBG = document.getElementById("filterInput").value;
 					async function api(checkedPDFs) {
 						try {
-							const data = function () {
+							const data = (function () {
 								var tmp = null;
 								$.ajax({
-									'async': false,
-									'type': "POST",
-									'global': false,
-									'dataType': 'json',
-									'url' : "{{ url_for( 'simbg_list', ur1=ur.ur1) }}"+"?usern="+'{{ur.usern}}'+"&pbgid="+idPBG,
-									'success': function (data) {
+									async: false,
+									type: "POST",
+									global: false,
+									dataType: "json",
+									url: "https://dcktrp.jakarta.go.id//apigis/web-dev/simbg/listdev?pbgid=PBG-317101-01032023-01_403177",
+									success: function (data) {
 										tmp = data;
-									}
+									},
 								});
 								return tmp;
-							}();
+							})();
 
-							var tableTBody = document.getElementById("table-body");
+							var tableTBody = document.getElementById("tableBody");
 							var pdfViewer = document.getElementById("pdf-viewer");
 
 							while (tableTBody.firstChild) {
 								tableTBody.removeChild(tableTBody.firstChild);
 							}
-							pdfViewer.setAttribute("src", "/apigis/id/96a67324aaa24eada9def8bbddb19da7");
+							pdfViewer.setAttribute(
+								"src",
+								"/apigis/id/96a67324aaa24eada9def8bbddb19da7"
+							);
 
 							if (data && data.length > 0) {
 								data.forEach((item, index) => {
@@ -181,35 +254,111 @@
 									const doc = item.document;
 									const size = item.size;
 									const sudin = item.sudin;
+									const indexFile = index + 1;
 
-									const trTitle = document.createElement("tr");
-									if ((index + 1) % 2 == 0) {
-										trTitle.classList.add("even-row");
-									}
+									//START TABLE BODY CREATION
+									//ROW 1
+									const tr1 = document.createElement("tr");
+									indexFile % 2 == 0 ? tr1.classList.add("even-row") : tr1.classList.add("odd-row")
+									tableBody.appendChild(tr1);
 
-									const tdNomor = document.createElement("td");
-									tdNomor.rowSpan = 2;
-									tdNomor.innerHTML = index + 1;
-									tdNomor.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap";
-									trTitle.appendChild(tdNomor);
+										const tr1td1 = document.createElement("td");
+										tr1td1.className = "tg-c3ow";
+										tr1td1.rowSpan = 4;
+										tr1td1.innerHTML = indexFile;
+										tr1.appendChild(tr1td1);
 
-									const tdCheckBox = document.createElement("td");
-									tdCheckBox.rowSpan = 2;
-									tdCheckBox.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap";
-									const checkbox = document.createElement("input");
-									checkbox.type = "checkbox";
-									checkbox.style = "width: 20px; height: 20px";
-									checkbox.addEventListener("click", () => {
+										const tr1td2 = document.createElement("td");
+										tr1td2.className = "tg-c3ow";
+										tr1td2.rowSpan = 2;
+										tr1.appendChild(tr1td2);
+
+											const checkbox1 = document.createElement("input");
+											checkbox1.type = "checkbox";
+											checkbox1.className = "cb";
+											checkbox1.id = `checkbox1-${indexFile}`;
+											tr1td2.appendChild(checkbox1);
+									
+										const tr1td3 = document.createElement("td");
+										tr1td3.className = "tg-0pky"
+										tr1td3.rowSpan = 2;
+										tr1td3.innerText = "Dokumen"
+										tr1td3.addEventListener("click", () => loadPDF(doc, sudin));
+										tr1.appendChild(tr1td3);
+
+										const tr1td4 = document.createElement("td");
+										tr1td4.className = "tg-0pky"
+										tr1td4.colSpan = 2;
+										tr1td4.innerText = doc;
+										tr1td4.addEventListener("click", () => loadPDF(doc, sudin));
+										tr1.appendChild(tr1td4);
+
+									//ROW 2
+									const tr2 = document.createElement("tr");
+									indexFile % 2 == 0 ? tr2.classList.add("even-row") : tr2.classList.add("odd-row")
+									tableBody.appendChild(tr2);
+
+									//ROW 3
+									const tr3 = document.createElement("tr");
+									indexFile % 2 == 0 ? tr3.classList.add("even-row") : tr3.classList.add("odd-row")
+									tableBody.appendChild(tr3);
+
+										const tr3td1 = document.createElement("td");
+										tr3td1.className = "tg-baqh"
+										tr3td1.rowSpan = 2;
+										tr3.appendChild(tr3td1);
+
+											const checkbox2 = document.createElement("input");
+											checkbox2.type = "checkbox";
+											checkbox2.className = "cb";
+											checkbox2.id = `checkbox2-${indexFile}`;
+											tr3td1.appendChild(checkbox2);
+
+										const tr3td2 = document.createElement("td");
+										tr3td2.className = "tg-0lax";
+										tr3td2.rowSpan = 2;
+										tr3td2.innerText = "Detil";
+										tr3td2.addEventListener("click", () => loadPDF(doc, sudin));
+										tr3.appendChild(tr3td2);
+
+										const tr3td3 = document.createElement("td");
+										tr3td3.className = "tg-0lax";
+										tr3td3.innerText = "Item";
+										tr3td3.addEventListener("click", () => loadPDF(doc, sudin));
+										tr3.appendChild(tr3td3);
+
+										const tr3td4 = document.createElement("td");
+										tr3td4.className = "tg-0lax"
+										tr3td4.innerText = fileName
+										tr3td4.addEventListener("click", () => loadPDF(doc, sudin));
+										tr3.appendChild(tr3td4);
+
+									//ROW 4
+									const tr4 = document.createElement("tr");
+									indexFile % 2 == 0 ? tr4.classList.add("even-row") : tr4.classList.add("odd-row")
+									tableBody.appendChild(tr4);
+
+										const tr4td1 = document.createElement("td");
+										tr4td1.className = "tg-0lax"
+										tr4td1.innerText = "Size"
+										tr4td1.addEventListener("click", () => loadPDF(doc, sudin));
+										tr4.appendChild(tr4td1);
+
+										const tr4td2 = document.createElement("td");
+										tr4td2.className = "tg-0lax"
+										tr4td2.innerText = size
+										tr4td2.addEventListener("click", () => loadPDF(doc, sudin));
+										tr4.appendChild(tr4td2);
+									//END TABLE BODY CREATION
+
+									//CHECKBOX FUNCTION
+									checkbox1.addEventListener("click", () => {
 										handleCheckboxClick(doc, checkedPDFs);
-										const submitButton =
-											document.getElementById("submit-button");
-
+										const submitButton = document.getElementById("submit-button");
 										submitButton.onclick = function () {
 											var idPBG2 = document.getElementById("filterInput").value;
+											console.log(checkedPDFs);
 											const text4 = Array.from(checkedPDFs).join(",");
-
 											const postLink = (function () {
 												var tmp = null;
 												$.ajax({
@@ -217,98 +366,64 @@
 													type: "POST",
 													global: false,
 													dataType: "text",
-													'url' : "{{ url_for( 'simbg_submit', ur3=ur.ur3) }}"+"?usern="+'{{ur.usern}}'+"&pbgid="+idPBG2+"&list=["+text4+"]",
+													url:
+													"{{ url_for( 'simbg_submit', ur3=ur.ur3) }}" +
+													"?usern=" +
+													"{{ur.usern}}" +
+													"&pbgid=" +
+													idPBG2 +
+													"&list=[" +
+													text4 +
+													"]",
 													success: function (data) {
 														tmp = data;
 														
-														if (data == "success")
-															{	clearAll("Data Sent!");
-																document.getElementById("filterInput").value="";
-																alert("user : "+ "{{ur.usern}}" + ", ID_PBG : "+ idPBG2 + ", " +data+ " !");
-															}
-														else if (data == "not-success")
-															{alert("user : "+ "{{ur.usern}}" + ", ID_PBG : "+ idPBG2 + ", " +data+ " !");}												
-														else
-															{alert("session expired, please log in again!");}
-
+														if (data == "success") {
+															clearAll("Data Sent!");
+															document.getElementById("filterInput").value = "";
+															alert(
+															"user : " +
+															"{{ur.usern}}" +
+															", ID_PBG : " +
+															idPBG2 +
+															", " +
+															data +
+															" !"
+															);
+														} else if (data == "not-success") {
+															alert(
+															"user : " +
+															"{{ur.usern}}" +
+															", ID_PBG : " +
+															idPBG2 +
+															", " +
+															data +
+															" !"
+															);
+														} else {
+															alert("session expired, please log in again!");
+														}
 													},
 												});
 												return tmp;
 											})();
-
+											
 											link = "";
-
+											
 											checkedPDFs.clear();
-
-
 										};
 									});
 
-									tdCheckBox.appendChild(checkbox);
-									trTitle.appendChild(tdCheckBox);
+									checkbox2.addEventListener("click", () => {
+										console.log(`checkbox2-${indexFile} checked`);
+									})
 
-									const tdDokumen = document.createElement("td");
-									tdDokumen.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
-									tdDokumen.innerHTML = "Dokumen";
-									tdDokumen.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
-									trTitle.appendChild(tdDokumen);
-
-									const tdGambar = document.createElement("td");
-									tdGambar.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
-									tdGambar.innerHTML = fileName;
-									tdGambar.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
-									tdGambar.colSpan = 2;
-									trTitle.appendChild(tdGambar);
-
-									tableTBody.appendChild(trTitle);
-
-									const trValue = document.createElement("tr");
-									if ((index + 1) % 2 == 0) {
-										trValue.classList.add("even-row");
-									}
-
-									const tdDetil = document.createElement("td");
-									tdDetil.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
-									tdDetil.innerHTML = "Detil";
-									tdDetil.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
-									trValue.appendChild(tdDetil);
-
-									const tdPropName = document.createElement("td");
-									tdPropName.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap; width: 55px; cursor: pointer";
-									tdPropName.innerHTML = "Item<br>Sudin<br>Size";
-									tdPropName.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
-									trValue.appendChild(tdPropName);
-
-									const tdPropValue = document.createElement("td");
-									tdPropValue.style =
-										"font-size: small; vertical-align: middle; white-space: nowrap; cursor: pointer";
-									tdPropValue.innerHTML =
-										": " + doc + " <br>: " + sudin + " <br>: " + size;
-									tdPropValue.addEventListener("click", () =>
-										loadPDF(doc, sudin)
-									);
-									trValue.appendChild(tdPropValue);
-
-									tableTBody.appendChild(trValue);
 								});
 							} else {
 								clearAll("Data Not Found");
 							}
 						} catch (error) {
 							console.error("An error occurred during the fetch:", error);
-							
 						}
 					}
 					api(checkedPDFs);
@@ -318,11 +433,14 @@
 					checkedPDFs.add(doc);
 				}
 
-				function clearAll(status){
+				function clearAll(status) {
 					// clearTableBody(checkedPDFs);
 					var tableTBody = document.getElementById("table-body");
 					var pdfViewer = document.getElementById("pdf-viewer");
-					pdfViewer.setAttribute("src", "/apigis/id/96a67324aaa24eada9def8bbddb19da7");
+					pdfViewer.setAttribute(
+						"src",
+						"/apigis/id/96a67324aaa24eada9def8bbddb19da7"
+					);
 					while (tableTBody.firstChild) {
 						tableTBody.removeChild(tableTBody.firstChild);
 					}
@@ -332,52 +450,64 @@
 					tdSuccess.colSpan = 3;
 					tdSuccess.textContent = status;
 					trSuccess.appendChild(tdSuccess);
-					tableTBody.appendChild(trSuccess);	
+					tableTBody.appendChild(trSuccess);
 					checkedPDFs.clear();
 				}
 
 				function loadPDF(doc, sudin) {
 					var xhr = new XMLHttpRequest();
-					xhr.open("GET", "{{ url_for( 'simbg_file', ur2=ur.ur2) }}"+"?doc="+doc+"&sudin="+sudin, true);
+					xhr.open(
+						"GET",
+						"{{ url_for( 'simbg_file', ur2=ur.ur2) }}" +
+							"?doc=" +
+							doc +
+							"&sudin=" +
+							sudin,
+						true
+					);
 					xhr.responseType = "blob";
-					
+
 					xhr.onload = function (event) {
 						var blob = xhr.response;
-						blobURL=window.URL.createObjectURL(blob);
+						blobURL = window.URL.createObjectURL(blob);
 						const pdfViewer = document.getElementById("pdf-viewer");
-						pdfViewer.setAttribute("src", blobURL)
+						pdfViewer.setAttribute("src", blobURL);
 
-						if (xhr.readyState === XMLHttpRequest.DONE){
-							if (xhr.response.type === 'application/pdf'){}
-							else {
+						if (xhr.readyState === XMLHttpRequest.DONE) {
+							if (xhr.response.type === "application/pdf") {
+							} else {
 								clearAll("session expired, please log in again!");
-								document.getElementById("filterInput").value="";		
+								document.getElementById("filterInput").value = "";
 								alert("session expired, please log in again!");
 							}
 						}
-					}
-						
+					};
+
 					xhr.send();
-					if (xhr.readyState === XMLHttpRequest.DONE){
-					if (xhr.response.type === 'text/html'){
-						const pdfViewer	= document.getElementById("pdf-viewer");
-						pdfViewer.setAttribute("src", "/apigis/id/96a67324aaa24eada9def8bbddb19da7");
+					if (xhr.readyState === XMLHttpRequest.DONE) {
+						if (xhr.response.type === "text/html") {
+							const pdfViewer = document.getElementById("pdf-viewer");
+							pdfViewer.setAttribute(
+								"src",
+								"/apigis/id/96a67324aaa24eada9def8bbddb19da7"
+							);
 						}
 					}
-
-				};
-				
+				}
 			};
 
 			function zoom() {
 				document.body.style.zoom = "80%";
-			};
+			}
 
 			document.getElementById("btn_sgnout").onclick = function () {
 				location.href = "{{ url_for( 'simbg_out', usern=ur.usern) }}";
-				
-				
 			};
+
+			checkbox1.addEventListener("click", () => {
+				
+			});
+		
 		</script>
 	</body>
 </html>
