@@ -53,11 +53,8 @@
 				word-wrap: break-word;
 			}
 			.tg td {
-				border-color: black;
-				border-style: solid;
-				border-width: 1px;
 				font-family: Arial, sans-serif;
-				font-size: 14px;
+				font-size: 12px;
 				overflow: hidden;
 				padding: 10px 5px;
 			}
@@ -71,25 +68,62 @@
 				overflow: hidden;
 				padding: 10px 5px;
 			}
-			.tg .tg-baqh {
-                border-color: inherit;
-				text-align: center;
-				vertical-align: top;
-			}
-			.tg .tg-c3ow {
-				border-color: inherit;
+			.td-number {
+				border: grey solid 1px;
 				text-align: center;
 				vertical-align: middle;
+				border-bottom: none;
 			}
-			.tg .tg-0pky {
-				border-color: inherit;
+			.td-top-checkbox {
+				border-top: grey solid 1px;
+				border-bottom: none;
+				text-align: center;
+				vertical-align: middle;
+				border-bottom: none;
+			}
+			.td-bot-checkbox {
+				border-bottom: grey solid 1px;
+				border-top: none;
+				text-align: center;
+				vertical-align: middle;
+				border-bottom: none;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.td-top1 {
+				border-left: grey solid 1px;
+				border-top: grey solid 1px;
+				border-bottom: grey solid 1px;
 				text-align: left;
 				vertical-align: top;
+				border-bottom: none;
+				font-weight: bold;
 			}
-			.tg .tg-0lax {
-                border-color: inherit;
+			.td-bot1 {
+				border-left: grey solid 1px;
+				border-bottom: grey solid 1px;
+				border-top: grey solid 1px;
 				text-align: left;
 				vertical-align: top;
+				border-top: none;
+				font-weight: bold;
+			}
+			.td-top2 {
+				border-right: grey solid 1px;
+				border-top: grey solid 1px;
+				border-bottom: grey solid 1px;
+				text-align: left;
+				vertical-align: top;
+				border-bottom: none;
+			}
+			.td-bot2 {
+				border-right: grey solid 1px;
+				border-bottom: grey solid 1px;
+				border-top: grey solid 1px;
+				text-align: left;
+				vertical-align: top;
+				border-top: none;
 			}
 			.tr-odd {
 				background-color: lightblue;
@@ -99,10 +133,12 @@
 			}
 			.th {
 				background-color: deepskyblue;
+				text-align: center;
+				vertical-align: middle;
 			}
             .cb {
-                width: 20px;
-                height: 20px;
+                width: 15px;
+                height: 15px;
             }
 		</style>
 	</head>
@@ -117,7 +153,7 @@
 				>
 					<div class="col-md-0">
 						<img
-							src="/apigis/id/ab29c285f476474a8a4d84a7088c6376"
+							src="https://jakartasatu.jakarta.go.id/portal/sharing/rest/content/items/77be3b899cd6463aad512e81544351a8/data"
 							style="width: 75.6px; height: 81.2px"
 						/>
 					</div>
@@ -160,17 +196,16 @@
 						<table class="tg" style="table-layout: fixed; width: 470px">
 							<!-- Table Head -->
 							<colgroup>
-								<col style="width: 50px" />
-								<col style="width: 100px" />
-								<col style="width: 90px" />
-								<col style="width: 60px" />
-								<col style="width: 170px" />
+								<col style="width: 3%" />
+								<col style="width: 4%" />
+								<col style="width: 5%" />
+								<col style="width: 14%" />
 							</colgroup>
 							<thead class="th">
 								<tr>
 									<th class="tg-c3ow">#</th>
 									<th class="tg-c3ow">SIMPAN</th>
-									<th class="tg-c3ow" colspan="3">PDF</th>
+									<th class="tg-c3ow" colspan="2">PDF</th>
 								</tr>
 							</thead>
 							<!-- Table Body -->
@@ -209,7 +244,9 @@
 		</div>
 
 		<script>
-			let checkedPDFs = new Set();
+			let checkedPDFsBangunan = new Set();
+			let checkedPDFsTanah = new Set();
+			
 			window.onload = function () {
 				const clearButton = document.getElementById("clear-button");
 				clearButton.addEventListener("click", () => {
@@ -220,7 +257,7 @@
 				const searchButton = document.getElementById("searchButton");
 				searchButton.addEventListener("click", () => {
 					var idPBG = document.getElementById("filterInput").value;
-					async function api(checkedPDFs) {
+					async function api(checkedPDFsTanah) {
 						try {
 							const data = (function () {
 								var tmp = null;
@@ -236,6 +273,7 @@
 								});
 								return tmp;
 							})();
+							console.log(data);
 
 							var tableTBody = document.getElementById("tableBody");
 							var pdfViewer = document.getElementById("pdf-viewer");
@@ -263,14 +301,13 @@
 									tableBody.appendChild(tr1);
 
 										const tr1td1 = document.createElement("td");
-										tr1td1.className = "tg-c3ow";
-										tr1td1.rowSpan = 4;
+										tr1td1.className = "td-number";
+										tr1td1.rowSpan = 2;
 										tr1td1.innerHTML = indexFile;
 										tr1.appendChild(tr1td1);
 
 										const tr1td2 = document.createElement("td");
-										tr1td2.className = "tg-c3ow";
-										tr1td2.rowSpan = 2;
+										tr1td2.className = "td-top-checkbox";
 										tr1.appendChild(tr1td2);
 
 											const checkbox1 = document.createElement("input");
@@ -278,144 +315,126 @@
 											checkbox1.className = "cb";
 											checkbox1.id = `checkbox1-${indexFile}`;
 											tr1td2.appendChild(checkbox1);
+
+											const span1 = document.createElement("span");
+											span1.innerText = "Bangunan";
+											tr1td2.appendChild(span1);
 									
 										const tr1td3 = document.createElement("td");
-										tr1td3.className = "tg-0pky"
-										tr1td3.rowSpan = 2;
-										tr1td3.innerText = "Dokumen"
+										tr1td3.className = "td-top1";
+										tr1td3.innerText = "Dokumen :";
 										tr1td3.addEventListener("click", () => loadPDF(doc, sudin));
 										tr1.appendChild(tr1td3);
 
 										const tr1td4 = document.createElement("td");
-										tr1td4.className = "tg-0pky"
-										tr1td4.colSpan = 2;
+										tr1td4.className = "td-top2";
 										tr1td4.innerText = doc;
 										tr1td4.addEventListener("click", () => loadPDF(doc, sudin));
 										tr1.appendChild(tr1td4);
 
 									//ROW 2
 									const tr2 = document.createElement("tr");
-									indexFile % 2 == 0 ? tr2.classList.add("even-row") : tr2.classList.add("odd-row")
+									indexFile % 2 == 0 ? tr2.classList.add("even-row") : tr2.classList.add("odd-row");
 									tableBody.appendChild(tr2);
 
-									//ROW 3
-									const tr3 = document.createElement("tr");
-									indexFile % 2 == 0 ? tr3.classList.add("even-row") : tr3.classList.add("odd-row")
-									tableBody.appendChild(tr3);
-
-										const tr3td1 = document.createElement("td");
-										tr3td1.className = "tg-baqh"
-										tr3td1.rowSpan = 2;
-										tr3.appendChild(tr3td1);
+										const tr2td1 = document.createElement("td");
+										tr2td1.className = "td-bot-checkbox";
+										tr2.appendChild(tr2td1);
 
 											const checkbox2 = document.createElement("input");
 											checkbox2.type = "checkbox";
 											checkbox2.className = "cb";
 											checkbox2.id = `checkbox2-${indexFile}`;
-											tr3td1.appendChild(checkbox2);
+											tr2td1.appendChild(checkbox2);
 
-										const tr3td2 = document.createElement("td");
-										tr3td2.className = "tg-0lax";
-										tr3td2.rowSpan = 2;
-										tr3td2.innerText = "Detil";
-										tr3td2.addEventListener("click", () => loadPDF(doc, sudin));
-										tr3.appendChild(tr3td2);
+											const span2 = document.createElement("span");
+											span2.innerText = "Tanah";
+											tr2td1.appendChild(span2);
 
-										const tr3td3 = document.createElement("td");
-										tr3td3.className = "tg-0lax";
-										tr3td3.innerText = "Item";
-										tr3td3.addEventListener("click", () => loadPDF(doc, sudin));
-										tr3.appendChild(tr3td3);
+										const tr2td2 = document.createElement("td");
+										tr2td2.className = "td-bot1";
+										tr2td2.innerText = "Item :";
+										tr2td2.addEventListener("click", () => loadPDF(doc, sudin));
+										tr2.appendChild(tr2td2);
 
-										const tr3td4 = document.createElement("td");
-										tr3td4.className = "tg-0lax"
-										tr3td4.innerText = fileName
-										tr3td4.addEventListener("click", () => loadPDF(doc, sudin));
-										tr3.appendChild(tr3td4);
+										const tr2td3 = document.createElement("td");
+										tr2td3.className = "td-bot2";
+										tr2td3.innerText = fileName;
+										tr2td3.addEventListener("click", () => loadPDF(doc, sudin));
+										tr2.appendChild(tr2td3);
 
-									//ROW 4
-									const tr4 = document.createElement("tr");
-									indexFile % 2 == 0 ? tr4.classList.add("even-row") : tr4.classList.add("odd-row")
-									tableBody.appendChild(tr4);
-
-										const tr4td1 = document.createElement("td");
-										tr4td1.className = "tg-0lax"
-										tr4td1.innerText = "Size"
-										tr4td1.addEventListener("click", () => loadPDF(doc, sudin));
-										tr4.appendChild(tr4td1);
-
-										const tr4td2 = document.createElement("td");
-										tr4td2.className = "tg-0lax"
-										tr4td2.innerText = size
-										tr4td2.addEventListener("click", () => loadPDF(doc, sudin));
-										tr4.appendChild(tr4td2);
 									//END TABLE BODY CREATION
 
 									//CHECKBOX FUNCTION
-									checkbox1.addEventListener("click", () => {
-										handleCheckboxClick(doc, checkedPDFs);
-										const submitButton = document.getElementById("submit-button");
-										submitButton.onclick = function () {
-											var idPBG2 = document.getElementById("filterInput").value;
-											console.log(checkedPDFs);
-											const text4 = Array.from(checkedPDFs).join(",");
-											const postLink = (function () {
-												var tmp = null;
-												$.ajax({
-													async: false,
-													type: "POST",
-													global: false,
-													dataType: "text",
-													url:
-													"{{ url_for( 'simbg_submit', ur3=ur.ur3) }}" +
-													"?usern=" +
-													"{{ur.usern}}" +
-													"&pbgid=" +
-													idPBG2 +
-													"&list=[" +
-													text4 +
-													"]",
-													success: function (data) {
-														tmp = data;
-														
-														if (data == "success") {
-															clearAll("Data Sent!");
-															document.getElementById("filterInput").value = "";
-															alert(
-															"user : " +
-															"{{ur.usern}}" +
-															", ID_PBG : " +
-															idPBG2 +
-															", " +
-															data +
-															" !"
-															);
-														} else if (data == "not-success") {
-															alert(
-															"user : " +
-															"{{ur.usern}}" +
-															", ID_PBG : " +
-															idPBG2 +
-															", " +
-															data +
-															" !"
-															);
-														} else {
-															alert("session expired, please log in again!");
-														}
-													},
-												});
-												return tmp;
-											})();
-											
-											link = "";
-											
-											checkedPDFs.clear();
-										};
+									checkbox1.addEventListener("click", function() {
+										console.log(this.checked);
+										console.log(doc);
+										console.log(checkedPDFsTanah);
 									});
 
 									checkbox2.addEventListener("click", () => {
-										console.log(`checkbox2-${indexFile} checked`);
+										handleCheckboxClickBangunan(doc, checkedPDFsBangunan);
+										console.log(checkedPDFsBangunan);
+									});
+
+									const submitButton = document.getElementById("submit-button");
+									submitButton.addEventListener("click", () => {
+										const idPBG = document.getElementById("filterInput").value;
+										console.log(checkedPDFsBangunan);
+										const textTanah = Array.from(checkedPDFsTanah).join(",");
+										const textBangunan = Array.from(checkedPDFsBangunan).join(",");
+										// const postLink = (function() {
+										// 	const postLink = (function () {
+										// 		var tmp = null;
+										// 		$.ajax({
+										// 			async: false,
+										// 			type: "POST",
+										// 			global: false,
+										// 			dataType: "text",
+										// 			url:
+										// 			"{{ url_for( 'simbg_submit', ur3=ur.ur3) }}" +
+										// 			"?usern=" +
+										// 			"{{ur.usern}}" +
+										// 			"&pbgid=" +
+										// 			idPBG2 +
+										// 			"&list=[" +
+										// 			text4 +
+										// 			"]",
+										// 			success: function (data) {
+										// 				tmp = data;
+														
+										// 				if (data == "success") {
+										// 					clearAll("Data Sent!");
+										// 					document.getElementById("filterInput").value = "";
+										// 					alert(
+										// 					"user : " +
+										// 					"{{ur.usern}}" +
+										// 					", ID_PBG : " +
+										// 					idPBG2 +
+										// 					", " +
+										// 					data +
+										// 					" !"
+										// 					);
+										// 				} else if (data == "not-success") {
+										// 					alert(
+										// 					"user : " +
+										// 					"{{ur.usern}}" +
+										// 					", ID_PBG : " +
+										// 					idPBG2 +
+										// 					", " +
+										// 					data +
+										// 					" !"
+										// 					);
+										// 				} else {
+										// 					alert("session expired, please log in again!");
+										// 				}
+										// 			},
+										// 		});
+										// 		return tmp;
+										// 	})();
+											
+										// 	link = "";
+										// })
 									})
 
 								});
@@ -426,15 +445,27 @@
 							console.error("An error occurred during the fetch:", error);
 						}
 					}
-					api(checkedPDFs);
+					api(checkedPDFsTanah);
 				});
 
-				function handleCheckboxClick(doc, checkedPDFs) {
-					checkedPDFs.add(doc);
+				function handleCheckboxClickTanah(doc, checkedPDFsTanah) {
+					if(this.checked) {
+						checkedPDFsTanah.add(doc);
+					} else {
+						checkedPDFsTanah.delete(doc);
+					}
+					
+				}
+				function handleCheckboxClickBangunan(doc, checkedPDFsBangunan) {
+					if(this.checked) {
+						checkedPDFsTanah.add(doc);
+					} else {
+						checkedPDFsTanah.delete(doc);
+					}
 				}
 
 				function clearAll(status) {
-					// clearTableBody(checkedPDFs);
+					// clearTableBody(checkedPDFsTanah);
 					var tableTBody = document.getElementById("table-body");
 					var pdfViewer = document.getElementById("pdf-viewer");
 					pdfViewer.setAttribute(
@@ -451,7 +482,8 @@
 					tdSuccess.textContent = status;
 					trSuccess.appendChild(tdSuccess);
 					tableTBody.appendChild(trSuccess);
-					checkedPDFs.clear();
+					checkedPDFsTanah.clear();
+					checkedPDFsBangunan.clear();
 				}
 
 				function loadPDF(doc, sudin) {
@@ -494,6 +526,7 @@
 						}
 					}
 				}
+
 			};
 
 			function zoom() {
@@ -503,10 +536,6 @@
 			document.getElementById("btn_sgnout").onclick = function () {
 				location.href = "{{ url_for( 'simbg_out', usern=ur.usern) }}";
 			};
-
-			checkbox1.addEventListener("click", () => {
-				
-			});
 		
 		</script>
 	</body>
