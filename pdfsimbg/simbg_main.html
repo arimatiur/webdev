@@ -75,21 +75,16 @@
 				border-bottom: none;
 			}
 			.td-top-checkbox {
-				border-top: grey solid 1px;
+				border-top: gray solid 1px;
 				border-bottom: none;
 				text-align: center;
 				vertical-align: middle;
-				border-bottom: none;
 			}
 			.td-bot-checkbox {
-				border-bottom: grey solid 1px;
+				border-bottom: gray solid 1px;
 				border-top: none;
 				text-align: center;
 				vertical-align: middle;
-				border-bottom: none;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
 			}
 			.td-top1 {
 				border-left: grey solid 1px;
@@ -193,7 +188,7 @@
 						</button>
 					</div>
 					<div class="bg-light p-0" style="height: 75%; overflow-y: scroll">
-						<table class="tg" style="table-layout: fixed; width: 470px">
+						<table class="tg" style="table-layout: fixed; width: 100%">
 							<!-- Table Head -->
 							<colgroup>
 								<col style="width: 3%" />
@@ -273,7 +268,6 @@
 								});
 								return tmp;
 							})();
-							console.log(data);
 
 							var tableTBody = document.getElementById("tableBody");
 							var pdfViewer = document.getElementById("pdf-viewer");
@@ -309,12 +303,15 @@
 										const tr1td2 = document.createElement("td");
 										tr1td2.className = "td-top-checkbox";
 										tr1.appendChild(tr1td2);
-
+										
 											const checkbox1 = document.createElement("input");
 											checkbox1.type = "checkbox";
 											checkbox1.className = "cb";
 											checkbox1.id = `checkbox1-${indexFile}`;
 											tr1td2.appendChild(checkbox1);
+
+											const brcb1 = document.createElement("br");
+											tr1td2.appendChild(brcb1);
 
 											const span1 = document.createElement("span");
 											span1.innerText = "Bangunan";
@@ -347,6 +344,9 @@
 											checkbox2.id = `checkbox2-${indexFile}`;
 											tr2td1.appendChild(checkbox2);
 
+											const brcb2 = document.createElement("br");
+											tr2td1.appendChild(brcb2);
+
 											const span2 = document.createElement("span");
 											span2.innerText = "Tanah";
 											tr2td1.appendChild(span2);
@@ -367,74 +367,84 @@
 
 									//CHECKBOX FUNCTION
 									checkbox1.addEventListener("click", function() {
-										console.log(this.checked);
-										console.log(doc);
-										console.log(checkedPDFsTanah);
+										if(this.checked){
+											checkedPDFsTanah.add(doc);
+											console.log(checkedPDFsTanah);
+										} else {
+											checkedPDFsTanah.delete(doc);
+											console.log(checkedPDFsTanah);
+										}
 									});
 
-									checkbox2.addEventListener("click", () => {
-										handleCheckboxClickBangunan(doc, checkedPDFsBangunan);
-										console.log(checkedPDFsBangunan);
+									checkbox2.addEventListener("click", function() {
+										if(this.checked){
+											checkedPDFsBangunan.add(doc);
+											console.log(checkedPDFsBangunan);
+										} else {
+											checkedPDFsBangunan.delete(doc);
+											console.log(checkedPDFsBangunan);
+										}
 									});
 
 									const submitButton = document.getElementById("submit-button");
 									submitButton.addEventListener("click", () => {
 										const idPBG = document.getElementById("filterInput").value;
 										console.log(checkedPDFsBangunan);
-										const textTanah = Array.from(checkedPDFsTanah).join(",");
-										const textBangunan = Array.from(checkedPDFsBangunan).join(",");
-										// const postLink = (function() {
-										// 	const postLink = (function () {
-										// 		var tmp = null;
-										// 		$.ajax({
-										// 			async: false,
-										// 			type: "POST",
-										// 			global: false,
-										// 			dataType: "text",
-										// 			url:
-										// 			"{{ url_for( 'simbg_submit', ur3=ur.ur3) }}" +
-										// 			"?usern=" +
-										// 			"{{ur.usern}}" +
-										// 			"&pbgid=" +
-										// 			idPBG2 +
-										// 			"&list=[" +
-										// 			text4 +
-										// 			"]",
-										// 			success: function (data) {
-										// 				tmp = data;
+										const textTanah = Array.from(checkedPDFsTanah).join(","); //sebelumnya text4
+										const textBangunan = Array.from(checkedPDFsBangunan).join(","); //sebelumnya text4
+										
+										const postLink = (function() {
+											const postLink = (function () {
+												var tmp = null;
+												$.ajax({
+													async: false,
+													type: "POST",
+													global: false,
+													dataType: "text",
+													url:
+													"{{ url_for( 'simbg_submit', ur3=ur.ur3) }}" +
+													"?usern=" +
+													"{{ur.usern}}" +
+													"&pbgid=" +
+													idPBG2 +
+													"&list=[" +
+													text4 +
+													"]",
+													success: function (data) {
+														tmp = data;
 														
-										// 				if (data == "success") {
-										// 					clearAll("Data Sent!");
-										// 					document.getElementById("filterInput").value = "";
-										// 					alert(
-										// 					"user : " +
-										// 					"{{ur.usern}}" +
-										// 					", ID_PBG : " +
-										// 					idPBG2 +
-										// 					", " +
-										// 					data +
-										// 					" !"
-										// 					);
-										// 				} else if (data == "not-success") {
-										// 					alert(
-										// 					"user : " +
-										// 					"{{ur.usern}}" +
-										// 					", ID_PBG : " +
-										// 					idPBG2 +
-										// 					", " +
-										// 					data +
-										// 					" !"
-										// 					);
-										// 				} else {
-										// 					alert("session expired, please log in again!");
-										// 				}
-										// 			},
-										// 		});
-										// 		return tmp;
-										// 	})();
+														if (data == "success") {
+															clearAll("Data Sent!");
+															document.getElementById("filterInput").value = "";
+															alert(
+															"user : " +
+															"{{ur.usern}}" +
+															", ID_PBG : " +
+															idPBG2 +
+															", " +
+															data +
+															" !"
+															);
+														} else if (data == "not-success") {
+															alert(
+															"user : " +
+															"{{ur.usern}}" +
+															", ID_PBG : " +
+															idPBG2 +
+															", " +
+															data +
+															" !"
+															);
+														} else {
+															alert("session expired, please log in again!");
+														}
+													},
+												});
+												return tmp;
+											})();
 											
-										// 	link = "";
-										// })
+											link = "";
+										})
 									})
 
 								});
@@ -447,22 +457,6 @@
 					}
 					api(checkedPDFsTanah);
 				});
-
-				function handleCheckboxClickTanah(doc, checkedPDFsTanah) {
-					if(this.checked) {
-						checkedPDFsTanah.add(doc);
-					} else {
-						checkedPDFsTanah.delete(doc);
-					}
-					
-				}
-				function handleCheckboxClickBangunan(doc, checkedPDFsBangunan) {
-					if(this.checked) {
-						checkedPDFsTanah.add(doc);
-					} else {
-						checkedPDFsTanah.delete(doc);
-					}
-				}
 
 				function clearAll(status) {
 					// clearTableBody(checkedPDFsTanah);
