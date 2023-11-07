@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test ArcGIS API</title>
+  <!-- import api dari arcgis untuk style -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
+  <script src="https://js.arcgis.com/4.27/"></script>
+  <!-- style setting dari user -->
+  <style>
+    html,
+    body,
+    #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+      background-color: black;
+    }
+
+    #titleDiv {
+      padding: 10px;
+    }
+
+    #titleText {
+      font-size: 20pt;
+      font-weight: 60;
+      padding-bottom: 10px;
+    }
+
+    #img {
+      width: 150px;
+      height: 100px;
+      border: 1px solid #000;
+      margin: 10px 0;
+    }
+
+    .contain {
+      object-fit: contain;
+    }
+  </style>
+
+  <script>
+    require([
+      "esri/Map",
+      "esri/views/MapView",
+      "esri/layers/GeoJSONLayer",
+      "esri/widgets/BasemapGallery",
+      "esri/widgets/Zoom",
+      "esri/widgets/Compass",
+      "esri/widgets/Search",
+      "esri/widgets/Legend",
+      "esri/widgets/Expand",
+      "esri/widgets/ScaleBar",
+      "esri/layers/FeatureLayer",
+      "esri/widgets/Swipe",
+      "esri/Color",
+      "esri/renderers/UniqueValueRenderer",
+      "esri/widgets/Locate",
+      "esri/layers/TileLayer"
+    ], function (
+      Map,
+      MapView,
+      GeoJSONLayer,
+      BasemapGallery,
+      Zoom,
+      Compass,
+      Search,
+      Legend,
+      Expand,
+      ScaleBar,
+      FeatureLayer,
+      Color,
+      UniqueValueRenderer,
+      Locate,
+      TileLayer
+    ) {
+      //MAP CONFIG
+
+      const tileLayer = new TileLayer({
+        url: "https://tiles-ap1.arcgis.com/k7mXQiKVwCwqyBIp/arcgis/rest/services/basemap_infrastruktur/MapServer",
+      });
+
+      const map = new Map({
+        //variable
+        basemap: "satellite",
+        layers: [tileLayer] // Basemap layer service
+      });
+      const view = new MapView({
+        //tampilan peta
+        container: "viewDiv",
+        //parameter yg dibutuhkan di library map view
+        center: [115.554780, -2.175871], // Longitude, latitude koordinat di tengah2
+        zoom: 18, // Zoom level
+        map: map,
+      });
+
+
+      //Add basemap toggle
+
+      const basemapGallery = new BasemapGallery({
+        view: view,
+        container: document.createElement("div")
+      });
+
+      // Create an Expand instance and set the content
+      // property to the DOM node of the basemap gallery widget
+
+      const bgExpand = new Expand({
+        view: view,
+        content: basemapGallery,
+      });
+
+      // Add the expand instance to the ui
+
+      view.ui.add(bgExpand, "bottom-right");
+
+      const renderer1 = {
+        type: "simple", // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#3f83cc",
+          outline: {
+            // makes the outlines of all features consistently light gray
+            color: "lightgray",
+            width: 0.5,
+          },
+        },
+      };
+
+      const jsonlayerbangunan = new GeoJSONLayer({
+        url: "https://raw.githubusercontent.com/auudaa/infrastruktur/main/bangunan.geojson",
+        title: "bangunan",
+        renderer: renderer1,
+      });
+
+      map.add(jsonlayerbangunan);
+      // let basemapGallery = new BasemapGallery({
+      //     view: view,
+      //});
+
+      const renderer2 = {
+        type: "simple", // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "blue",
+          outline: {
+            // makes the outlines of all features consistently light gray
+            color: "lightgray",
+            width: 0.5,
+          },
+        },
+      };
+      const jsonlayerdozer = new GeoJSONLayer({
+        url: "https://raw.githubusercontent.com/auudaa/infrastruktur/main/dozer.geojson",
+        title: "Dozer",
+        renderer: renderer2
+      });
+      map.add(jsonlayerdozer);
+
+      const renderer3 = {
+        type: "simple", // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "red",
+          outline: {
+            // makes the outlines of all features consistently light gray
+            color: "lightgray",
+            width: 0.5,
+          },
+        },
+      };
+
+      const jsonlayerdumptruck = new GeoJSONLayer({
+        url: "https://raw.githubusercontent.com/auudaa/infrastruktur/main/dump_truck.geojson",
+        title: "Dump Truck",
+        renderer: renderer3
+      });
+      map.add(jsonlayerdumptruck);
+
+      const renderer4 = {
+        type: "simple", // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#cc893f",
+          outline: {
+            // makes the outlines of all features consistently light gray
+            color: "lightgray",
+            width: 0.5,
+          },
+        },
+      };
+      const jsonlayerexcavator = new GeoJSONLayer({
+        url: "https://raw.githubusercontent.com/auudaa/infrastruktur/main/excavator.geojson",
+        title: "Excavator",
+        renderer: renderer4,
+      });
+
+      map.add(jsonlayerexcavator);
+
+      const renderer5 = {
+        type: "simple", // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#893fcc",
+          outline: {
+            // makes the outlines of all features consistently light gray
+            color: "lightgray",
+            width: 0.5,
+          },
+        },
+      };
+      const jsonlayergrader = new GeoJSONLayer({
+        url: "https://raw.githubusercontent.com/auudaa/infrastruktur/main/grader.geojson",
+        title: "Grader",
+        renderer: renderer5,
+      });
+
+      map.add(jsonlayergrader);
+
+      const renderer6 = {
+        type: "simple", // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "gray",
+          outline: {
+            // makes the outlines of all features consistently light gray
+            color: "lightgray",
+            width: 0.5,
+          },
+        },
+      };
+      const jsonlayerjalan = new GeoJSONLayer({
+        url: "https://raw.githubusercontent.com/auudaa/infrastruktur/main/jalan.geojson",
+        title: "Jalan",
+        renderer: renderer6,
+      });
+
+      map.add(jsonlayerjalan);
+
+      const renderer7 = {
+        type: "simple", // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#0000FF",
+          outline: {
+            // makes the outlines of all features consistently light gray
+            color: "lightgray",
+            width: 0.5,
+          },
+        },
+      };
+      const jsonlayerfueltruck = new GeoJSONLayer({
+        url: "https://raw.githubusercontent.com/auudaa/infrastruktur/main/jfuel_truck.geojson",
+        title: "Fuel Truck",
+        renderer: renderer7,
+      });
+
+      map.add(jsonlayerfueltruck);
+
+      const renderer8 = {
+        type: "simple", // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "#FFFF00",
+          outline: {
+            // makes the outlines of all features consistently light gray
+            color: "lightgray",
+            width: 0.5,
+          },
+        },
+      };
+      const jsonlayersarana = new GeoJSONLayer({
+        url: "https://raw.githubusercontent.com/auudaa/infrastruktur/main/sarana.geojson",
+        title: "Sarana",
+        renderer: renderer8,
+      });
+
+      map.add(jsonlayersarana);
+
+      const renderer9 = {
+        type: "simple", // autocasts as new SimpleRenderer()
+        symbol: {
+          type: "simple-fill", // autocasts as new SimpleFillSymbol()
+          color: "green",
+          outline: {
+            // makes the outlines of all features consistently light gray
+            color: "lightgray",
+            width: 0.5,
+          },
+        },
+      };
+      const jsonlayervegetasi = new GeoJSONLayer({
+        url: "https://raw.githubusercontent.com/auudaa/infrastruktur/main/vegetasi.geojson",
+        title: "Vegetasi",
+        renderer: renderer9,
+      });
+
+      map.add(jsonlayervegetasi);
+
+      const jsonlayerdrone = new GeoJSONLayer({
+        url: "https://tiles-ap1.arcgis.com/k7mXQiKVwCwqyBIp/arcgis/rest/services/basemap_infrastruktur/MapServer",
+        title: "Data Drone",
+      });
+
+      map.add(jsonlayerdrone);
+
+      view.ui.add("titleDiv", "top-right");
+
+      //Search
+      const searchWidget = new Search({
+        view: view,
+      });
+      view.ui.add(searchWidget, {
+        position: "bottom-right",
+      });
+
+      //Kompas
+      const compass = new Compass({
+        view: view,
+      });
+      view.ui.add(compass, {
+        position: "top-left",
+      });
+
+      //add legend
+      const legend = new Expand({
+        content: new Legend({
+          view: view,
+          style: "card", // other styles include 'classic'
+        }),
+        view: view,
+        expanded: true,
+      });
+      view.ui.add(legend, "top-left");
+
+      //Skala
+      const scaleBar = new ScaleBar({
+        view: view,
+        unit: "dual", // The scale bar displays both metric and non-metric units.
+      });
+      view.ui.add(scaleBar, {
+        position: "bottom-left",
+      });
+
+      const locateBtn = new Locate({
+        view: view
+      });
+
+      // Add the locate widget to the top left corner of the view
+      view.ui.add(locateBtn, "top-left");
+
+      view.when(() => {
+        view.goTo(tileLayer.fullExtent).catch((error) => {
+          if (error.name != "AbortError") {
+            console.error(error);
+          }
+        });
+      });
+      
+    });
+
+  </script>
+</head>
+
+<body>
+  <div id="viewDiv"></div>
+  <div id="titleDiv" class="esri-widget" style="background-color: #343434">
+    <img
+      src="https://github.com/auudaa/webgis/blob/c007f551e413e427737313b980757a6104bced23/src/logo%20aria%20png.png?raw=true"
+      style="width: 4cm; height: 1cm" />
+    <div id="titleText" style="color: white">Peta Area Infrastruktur</div>
+    <div style="color: white">Tabalong, Kalimantan Selatan</div>
+  </div>
+</body>
+
+</html>
