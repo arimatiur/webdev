@@ -28,10 +28,17 @@
         position: absolute;
         top: 5%;
         left: 5%;
+        background-color: aliceblue;
+        border: 1px solid #212529;
+        border-radius: 0.25rem;
       }
     </style>
     <script>
-      require(["esri/Map", "esri/views/MapView"], (Map, MapView) => {
+      require(["esri/Map", "esri/views/MapView", "esri/layers/FeatureLayer"], (
+        Map,
+        MapView,
+        FeatureLayer
+      ) => {
         const map = new Map({
           basemap: "streets",
         });
@@ -44,26 +51,40 @@
             components: [],
           },
         });
+        const addLayer = () => {
+          const url = document.getElementById("serviceUrl").value;
+          const featureLayer = new FeatureLayer({
+            url: url,
+          });
+          map.add(featureLayer);
+          console.log(featureLayer);
+        };
+        const addButton = document.getElementById("addButton");
+        addButton.addEventListener("click", () => {
+          addLayer();
+        });
       });
     </script>
   </head>
   <body>
     <div id="viewDiv">
       <div class="urlInput">
-        <div class="input-group mb-3">
+        <div class="input-group">
           <input
             type="text"
             class="form-control"
-            placeholder="Recipient's username"
-            aria-label="Recipient's username"
-            aria-describedby="button-addon2"
+            placeholder="Service URL"
+            id="serviceUrl"
           />
           <button
             class="btn btn-outline-secondary"
             type="button"
-            id="button-addon2"
+            id="addButton"
           >
-            Button
+            Add
+          </button>
+          <button class="btn btn-outline-secondary" type="button">
+            Remove
           </button>
         </div>
       </div>
