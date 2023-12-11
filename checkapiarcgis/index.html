@@ -50,19 +50,51 @@
           ui: {
             components: [],
           },
+          popup: {
+            defaultPopupTemplateEnabled: true,
+          },
         });
         const addLayer = () => {
           const url = document.getElementById("serviceUrl").value;
-          const featureLayer = new FeatureLayer({
-            url: url,
-          });
-          map.add(featureLayer);
-          console.log(featureLayer);
+          if (url) {
+            const featureLayer = new FeatureLayer({
+              url: url,
+            });
+            map.add(featureLayer);
+            console.log(view.scale);
+            console.log(featureLayer);
+            console.log(featureLayer.minScale);
+            const input = document.getElementById("serviceUrl");
+            input.style = "border: 1px solid #ced4da";
+          } else {
+            alert("Can not add empty input");
+            hightLightInput();
+          }
         };
         const addButton = document.getElementById("addButton");
         addButton.addEventListener("click", () => {
           addLayer();
         });
+        const removeLayer = () => {
+          if (map.layers.length > 0) {
+            map.removeAll();
+            alert("Layer Removed");
+            const input = document.getElementById("serviceUrl");
+            input.value = "";
+            input.style = "border: 1px solid #ced4da";
+          } else {
+            alert("Add a Layer First");
+            hightLightInput();
+          }
+        };
+        const removeButton = document.getElementById("removeButton");
+        removeButton.addEventListener("click", () => {
+          removeLayer();
+        });
+        const hightLightInput = () => {
+          const input = document.getElementById("serviceUrl");
+          input.style = "border: 2px solid red;";
+        };
       });
     </script>
   </head>
@@ -83,7 +115,11 @@
           >
             Add
           </button>
-          <button class="btn btn-outline-secondary" type="button">
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="removeButton"
+          >
             Remove
           </button>
         </div>
