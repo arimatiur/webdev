@@ -19,7 +19,10 @@
       html,
       body,
       #map {
-        height: 700px;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        margin: 0;
       }
     </style>
   </head>
@@ -30,12 +33,12 @@
         .then((response) => response.json())
         .then((dataset) => {
           const map = L.map("map").setView(
-            [-6.175490901979208, 106.82709320110249],
-            13
+            [-6.185237655228997, 106.84496716885934],
+            16
           );
 
           var basemap = L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            "http://www.google.cn/maps/vt?lyrs=s@189&gl=cn&x={x}&y={y}&z={z}",
             {
               attribution:
                 '&copy; <a href="http://www.example.com/">Example</a>',
@@ -52,7 +55,6 @@
                   return {
                     color: "#f5f0f0",
                     weight: 4,
-
                     fillColor: "#ff0000",
                     fillOpacity: 1,
                   };
@@ -60,7 +62,32 @@
                   return { color: "#0000ff" };
               }
             },
+            onEachFeature: function (feature, layer) {
+              layer.bindPopup("<b>" + feature.properties.NAMOBJ + "</b>");
+            },
           }).addTo(map);
+
+          // Add geolocation control
+          map.locate({ setView: true, maxZoom: 16 });
+
+          function onLocationFound(e) {
+            var radius = e.accuracy / 2;
+
+            L.marker(e.latlng)
+              .addTo(map)
+              .bindPopup("You are within " + radius + " meters from this point")
+              .openPopup();
+
+            L.circle(e.latlng, radius).addTo(map);
+          }
+
+          map.on("locationfound", onLocationFound);
+
+          function onLocationError(e) {
+            alert(e.message);
+          }
+
+          map.on("locationerror", onLocationError);
         })
         .catch((error) => {
           console.error("Error fetching data:", error);
