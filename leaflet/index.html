@@ -26,7 +26,7 @@
   <body>
     <div id="map"></div>
     <script>
-      fetch("./data.geojson")
+      fetch("./Survei_Toponim_Addisty.geojson")
         .then((response) => response.json())
         .then((dataset) => {
           const map = L.map("map").setView(
@@ -47,7 +47,7 @@
 
           L.geoJSON(GeoJSONLayer, {
             style: function (feature) {
-              switch (feature.properties.FUNGSI_JALAN) {
+              switch (feature.properties.NAMOBJ) {
                 case 1:
                   return {
                     color: "#f5f0f0",
